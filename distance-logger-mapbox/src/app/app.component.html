@@ -6,9 +6,27 @@
     role="navigation"
     class="mat-elevation-z8"
   >
-    this is parent menu
+      <button
+      mat-button
+      (click)="navSticky ? null : sidenav2.toggle()"
+      class="close-sidenav2-2"
+    >        <mat-icon> close </mat-icon>
+    </button>
+
+    <mat-checkbox *ngIf="!getIsBigScreen" class="close-sidenav2"
+      [checked]="getNavSticky"
+      [color]="color"
+      (change)="setNavSticky($event.checked)">
+      <!--  *ngIf="sidenavOver" -->
+      <!-- [indeterminate]="someComplete()" -->
+      <!-- {{task.name}} -->
+      <!-- Sticky Navigation -->
+    <mat-icon *ngIf="getNavSticky">lock</mat-icon>
+    <mat-icon *ngIf="!getNavSticky">lock_open</mat-icon>
+    </mat-checkbox>
+    Ajosuunnitelma
   </mat-sidenav>
-  <mat-sidenav-content>
+  <mat-sidenav-content class="drawer-contents">
 
   <mat-toolbar class="mat-elevation-z8">
       <button
@@ -16,6 +34,7 @@
         *ngIf="sidenav.mode === 'over'"
         (click)="sidenav.toggle()"
       >
+
         <mat-icon *ngIf="!sidenav.opened"> menu </mat-icon>
         <mat-icon *ngIf="sidenav.opened"> close </mat-icon>
       </button>
@@ -24,10 +43,15 @@
 
     <mat-sidenav-container>
       <mat-sidenav #sidenav="matSidenav" class="mat-elevation-z8">
+        <button class="close-sidenav"
+          mat-icon-button
+          (click)="sidenav.toggle()"
+        ><mat-icon>close</mat-icon>
+        </button>
         <img
           class="avatar mat-elevation-z8"
           src="https://avatars.githubusercontent.com/u/42906162?v=4"
-        />;
+        />
 
         <h4 class="name">Maiska</h4>
         <p class="designation">The Engineer</p>
@@ -54,14 +78,16 @@
           <span>Help</span>
         </button>
 
-        <!-- NAPPULA AVAAMAAN TOISEN SIDENAVIN -->
+        <!-- NAPPULA AVAAMAAN TOISEN SIDENAVIN - PARENT MENUN-->
 
         <button
         mat-button
-        (click)="sidenav2.toggle()"
-        class="toggle-Mbtn new--item"
+        (click)="navSticky ? null : sidenav2.toggle()"
+        class="toggle-Mbtn new--item menu-button"
       >
-        <i class="material-icons color-white">menu</i>
+      <mat-icon> directions</mat-icon>
+      Ajosuunnitelma
+      <mat-icon *ngIf="getNavSticky">lock</mat-icon>
       </button>
 
       </mat-sidenav>

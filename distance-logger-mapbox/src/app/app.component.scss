@@ -3,6 +3,12 @@ mat-toolbar {
   color: white;
 }
 
+.example-margin {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+}
+
 mat-sidenav {
   margin: 16px;
   width: 200px;
@@ -10,7 +16,7 @@ mat-sidenav {
   background: #002b5c;
   color: white;
   border-radius: 10px;
-  padding: 16px;
+  padding: 35px 16px 16px 16px;
   text-align: center;
   height: calc(100vh - 100px);
 }
@@ -29,6 +35,10 @@ mat-sidenav {
 mat-sidenav-container {
   height: calc(100vh);
   position: static;
+}
+
+.drawer-contents {
+  display: contents !important;
 }
 
 .menu-button {
@@ -65,4 +75,22 @@ mat-divider {
   margin-top: 16px;
   margin-bottom: 16px;
   background-color: rgba(255, 255, 255, 0.5);
+}
+
+.close-sidenav {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.close-sidenav2 {
+  position: absolute;
+  left: 10px;
+  top: 5px;
+}
+
+.close-sidenav2-2 {
+  position: absolute;
+  right: 5px;
+  top: 5px;
 }
