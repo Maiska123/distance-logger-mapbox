@@ -2,3 +2,21 @@
  background-image: url('../../../assets/map.jpg');
  height: -webkit-fill-available;
 }
+
+.box {
+  overflow: hidden;
+  z-index: 1111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.map {
+  position: absolute;
+  width: 90%;
+  height: calc(100vh - 130px);
+  border-radius: 10px;
+}
+
+body { margin: 0; padding: 0; }
+// #map { position: absolute; top: 0; bottom: 0; width: 100%; }

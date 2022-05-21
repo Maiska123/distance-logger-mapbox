@@ -19,6 +19,7 @@ mat-sidenav {
   padding: 35px 16px 16px 16px;
   text-align: center;
   height: calc(100vh - 100px);
+  overflow-x: hidden;
 }
 
 .content {
@@ -93,4 +94,14 @@ mat-divider {
   position: absolute;
   right: 5px;
   top: 5px;
+}
+app-sidenav-help{
+  width: -webkit-fill-available;
+}
+
+.big-nav{
+  width: 25vw;
+}
+.mat-drawer-inner-container {
+  overflow: hidden !important;
 }

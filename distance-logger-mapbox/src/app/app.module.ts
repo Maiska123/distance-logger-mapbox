@@ -11,10 +11,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { SidenavDirectionsComponent } from './pages/sidenav-components/sidenav-directions/sidenav-directions.component';
+import { SidenavHelpComponent } from './pages/sidenav-components/sidenav-help/sidenav-help.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    SidenavDirectionsComponent,
+    SidenavHelpComponent
   ],
   imports: [
     BrowserModule,
