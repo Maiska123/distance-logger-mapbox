@@ -5,12 +5,39 @@ import { delay, filter } from 'rxjs/operators';
 import { NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ThemePalette } from '@angular/material/core';
-
+import { trigger, state, style, transition, animate, query, animateChild, group } from '@angular/animations';
 @UntilDestroy()
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  animations: [
+    trigger('enabledStateChange', [
+      state(
+        'default',
+        style({
+			opacity: 1,
+		})
+	),
+	state(
+		'disabled',
+		style({
+			opacity: 0.5,
+        })
+      ),
+      transition('* => *', animate('300ms ease')),
+    ]),
+  trigger('fadeSlideInOut', [
+    transition(':enter', [
+      style({ opacity: 0, display: 'contents' }),
+      animate('500ms', style({ opacity: 1,display: 'contents' })),
+    ]),
+    transition(':leave', [
+      animate('500ms', style({ opacity: 0,display: 'contents' })),
+    ]),
+  ]),
+
+  ]
 })
 export class AppComponent {
   title = 'distance-logger-mapbox';
@@ -23,6 +50,20 @@ export class AppComponent {
 
   public navSticky: boolean = false;
   public isBigScreen: boolean = false;
+  public helpWanted: boolean = false;
+  public directionsWanted: boolean = false;
+  private sidenavclosing: boolean = false;
+  private sidenavManualclose: boolean = false;
+
+  public set setHelpWanted(bool:any) {
+    this.helpWanted = bool;
+    this.directionsWanted = !bool;
+    // this.sidenav.toggle();
+  }
+
+  public get getIsHelpWanted() {
+    return this.helpWanted;
+  }
 
   public set setIsBigScreen(bool:any) {
     this.isBigScreen = bool;
@@ -46,14 +87,21 @@ export class AppComponent {
     else if (!event && !this.isBigScreen) this.sidenav.mode = 'over';
   };
 
-  public setNavSticky2(event:boolean): void{
-    this.navSticky = event;
-  };
+  public openSwitchPanel(withHelp? :boolean) {
+    if (this.navSticky) return;
+    this.sidenavManualclose = true;
+    withHelp ? this.setHelpWanted = true : this.setHelpWanted = false;
+    if (!this.sidenav.opened) this.sidenav.toggle();
+  }
 
   public color: ThemePalette = 'primary';
 
   constructor(private observer: BreakpointObserver, private router: Router) {}
 
+  // ngOnInit(): void {
+
+  //   // this.sidenav._animationState .subscribe(() => );
+  // }
   ngAfterViewInit() {
     this.observer
       .observe(['(max-width: 800px)'])
@@ -65,6 +113,7 @@ export class AppComponent {
           this.sidenav.close();
         } else {
           this.setIsBigScreen = true;
+          this.setNavSticky(false);
           this.sidenav.mode = 'side';
           this.sidenav.open();
         }
@@ -81,5 +130,20 @@ export class AppComponent {
           this.sidenav.close();
         }
       });
+
+      // this.sidenav.closedStart.subscribe(()=> {
+      //   this.sidenavclosing = true;
+      // });
+
+      // this.sidenav.openedStart.subscribe(()=> {
+      //   this.sidenavclosing = false;
+      // });
+
+      // this.sidenav._animationEnd.subscribe(()=> {
+      //   if(this.sidenavclosing && (this.getIsHelpWanted || this.directionsWanted) && !this.sidenavManualclose) {
+      //     this.sidenavManualclose = false;
+      //     this.sidenav.toggle(true,'program');
+      //   }
+      // });
   }
 }
