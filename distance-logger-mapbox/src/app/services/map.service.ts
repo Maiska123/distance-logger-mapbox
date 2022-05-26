@@ -1,10 +1,19 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MapService {
+
+  public appTitleString: string = 'Eeppinen ajopäiväkirja -äppi!';
+  public appTitle: BehaviorSubject<string> = new BehaviorSubject(this.appTitleString);
+
+  public set setAppTitle(newTitle:string){
+    this.appTitleString = newTitle;
+    this.appTitle.next(newTitle);
+  }
+
   constructor /*private db: AngularFireDatabase*/() /*public app: FirebaseApp*/ {
     // mapboxgl.accessToken= environment.mapbox.accessToken;
     //firebase.initializeApp(environment.firebaseConfig)

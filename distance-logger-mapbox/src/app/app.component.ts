@@ -1,3 +1,4 @@
+import { MapService } from './services/map.service';
 import { Component, ViewChild } from '@angular/core';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { MatSidenav } from '@angular/material/sidenav';
@@ -6,6 +7,8 @@ import { NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ThemePalette } from '@angular/material/core';
 import { trigger, state, style, transition, animate, query, animateChild, group } from '@angular/animations';
+import { Subscription } from 'rxjs';
+import { Direction } from './interfaces/direction';
 @UntilDestroy()
 @Component({
   selector: 'app-root',
@@ -29,16 +32,24 @@ import { trigger, state, style, transition, animate, query, animateChild, group 
     ]),
   trigger('fadeSlideInOut', [
     transition(':enter', [
-      style({ opacity: 0, display: 'contents' }),
-      animate('500ms', style({ opacity: 1,display: 'contents' })),
+      style({ opacity: 0 }),
+      animate('500ms ease-in', style({ opacity: 1 })),
     ]),
     transition(':leave', [
-      animate('500ms', style({ opacity: 0,display: 'contents' })),
+      animate('100ms', style({ opacity: 0 })),
     ]),
   ]),
-
   ]
 })
+    // transition('* => *', [
+    //   query(':enter', [
+    //     style({ opacity: 0 }),
+    //     stagger(100, [
+    //       animate('500ms ease-in', style({ opacity: 1 })),
+    //     ])
+    //   ]
+    //   )
+    // ]),
 export class AppComponent {
   title = 'distance-logger-mapbox';
 
@@ -48,12 +59,17 @@ export class AppComponent {
   @ViewChild('#sidenav2')
   sidenav2!: MatSidenav;
 
+  private subscription!: Subscription;
+
   public navSticky: boolean = false;
   public isBigScreen: boolean = false;
   public helpWanted: boolean = false;
   public directionsWanted: boolean = false;
   private sidenavclosing: boolean = false;
   private sidenavManualclose: boolean = false;
+  public appTitle: string = '';
+  public direction: Direction[] = [];
+  // private subscription: Subscription | undefined;
 
   public set setHelpWanted(bool:any) {
     this.helpWanted = bool;
@@ -96,12 +112,23 @@ export class AppComponent {
 
   public color: ThemePalette = 'primary';
 
-  constructor(private observer: BreakpointObserver, private router: Router) {}
+  constructor(private observer: BreakpointObserver, private router: Router, private mapService: MapService) {
+    this.subscription = new Subscription();
+  }
 
-  // ngOnInit(): void {
+  ngOnInit(): void {
+    this.subscription.add(
 
-  //   // this.sidenav._animationState .subscribe(() => );
-  // }
+      this.mapService.appTitle.subscribe((newTitle) => {
+        this.appTitle = newTitle;
+      })
+    )
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe()
+  }
+
   ngAfterViewInit() {
     this.observer
       .observe(['(max-width: 800px)'])

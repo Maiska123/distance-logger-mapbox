@@ -24,8 +24,8 @@ constructor(coordinates: any, public properties?: any) {
 }
 
 export class FeatureCollection {
-type = 'FeatureCollection'
-constructor(public features: Array<GeoJson>) {}
+  type = 'FeatureCollection'
+  constructor(public features: Array<GeoJson>) {}
 }
 
 export interface Coordinate {
