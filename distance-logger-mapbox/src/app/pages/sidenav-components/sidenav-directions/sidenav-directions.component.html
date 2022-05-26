@@ -1,3 +1,16 @@
-<p>
-  sidenav-directions works!
-</p>
+  <div @items class="top-buttons" *ngIf="list[0]">
+    <button md-fab (click)="remove(0)">
+      <mat-icon>remove_circle_outline</mat-icon>
+    </button>
+  </div>
+
+
+  <div class="list-container example-list"
+  cdkDropList (cdkDropListDropped)="drop($event)">
+    <app-direction @items class="box example-box"
+      *ngFor="let item of list; let i=index;" [item]="item"
+      (itemOutputRemove)="removeFromItem($event)"
+      (itemOutputAdd)="addFromItem($event)"
+      cdkDrag>
+    </app-direction>
+  </div>

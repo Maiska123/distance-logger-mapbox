@@ -37,3 +37,9 @@ $distance-logger-mapbox-theme: mat.define-light-theme((
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.mat-drawer-inner-container {
+  overflow-x: hidden !important;
+}
+#second-navbar{
+  will-change: width;
+  transition: 0.2s ease; }

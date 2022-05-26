@@ -1,0 +1,13 @@
+<div class="flex-container">
+  <div class="left-col">
+    <div class="delete hover" (click)="remove(item)">
+      <mat-icon>delete</mat-icon>
+    </div>
+    <div class="add-to-end hover" (click)="add(item)">
+      <mat-icon>add</mat-icon>
+    </div>
+  </div>
+  <div class="right-col">
+   <p> {{item.place_name}}</p>
+  </div>
+</div>

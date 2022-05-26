@@ -1,5 +1,6 @@
 <mat-sidenav-container>
   <mat-sidenav
+    id="second-navbar"
     #sidenav2
     mode="over"
     position="end"
@@ -28,10 +29,12 @@
 
     <span [ngSwitch]="getIsHelpWanted">
     <app-sidenav-help *ngSwitchCase="true" @fadeSlideInOut>
-      AAPPUUUVA!
+      <!-- AAPPUUUVA! -->
     </app-sidenav-help>
-    <app-sidenav-directions *ngSwitchCase="false" @fadeSlideInOut>
-      Ajosuunnitelma
+    <app-sidenav-directions *ngSwitchCase="false" @fadeSlideInOut
+      (listOutput)="direction"
+    >
+      <!-- Ajosuunnitelma -->
     </app-sidenav-directions>
     </span>
 
@@ -54,7 +57,16 @@
         <mat-icon *ngIf="!sidenav.opened"> menu </mat-icon>
         <mat-icon *ngIf="sidenav.opened"> close </mat-icon>
       </button>
-      Eeppinen ajopäiväkirja -äppi
+
+      <span [ngSwitch]="appTitle.length > 0">
+      <ng-container  *ngSwitchCase="true">
+       {{appTitle}}
+      </ng-container >
+      <ng-container  *ngSwitchCase="false">
+        <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+      </ng-container>
+      </span>
+
     </mat-toolbar>
 
     <mat-sidenav-container>

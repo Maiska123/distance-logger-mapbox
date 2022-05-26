@@ -1,3 +1,4 @@
+import { DirectionComponent } from './pages/sidenav-components/sidenav-directions/direction/direction.component';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -13,12 +14,14 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { SidenavDirectionsComponent } from './pages/sidenav-components/sidenav-directions/sidenav-directions.component';
 import { SidenavHelpComponent } from './pages/sidenav-components/sidenav-help/sidenav-help.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
     AppComponent,
     SidenavDirectionsComponent,
-    SidenavHelpComponent
+    SidenavHelpComponent,
+    DirectionComponent
   ],
   imports: [
     BrowserModule,
@@ -30,7 +33,8 @@ import { SidenavHelpComponent } from './pages/sidenav-components/sidenav-help/si
     MatIconModule,
     MatDividerModule,
     MatMenuModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    DragDropModule
   ],
   providers: [],
   bootstrap: [AppComponent]
