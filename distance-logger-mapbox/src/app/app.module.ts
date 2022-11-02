@@ -15,7 +15,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { SidenavDirectionsComponent } from './pages/sidenav-components/sidenav-directions/sidenav-directions.component';
 import { SidenavHelpComponent } from './pages/sidenav-components/sidenav-help/sidenav-help.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 @NgModule({
   declarations: [
     AppComponent,
@@ -34,7 +34,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     MatDividerModule,
     MatMenuModule,
     MatCheckboxModule,
-    DragDropModule
+    DragDropModule,
+    MatSnackBarModule
   ],
   providers: [],
   bootstrap: [AppComponent]

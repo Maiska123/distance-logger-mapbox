@@ -32,6 +32,7 @@ const routes: Routes = [
     path: '**',
     component: NotFoundComponent,
   },
+  // create 
 ];
 
 @NgModule({

@@ -1,0 +1,1140 @@
+{
+    "code": "Ok",
+    "waypoints": [
+        {
+            "distance": 20.430902293185742,
+            "name": "Kauppakatu",
+            "location": [
+                23.759335,
+                61.498276
+            ],
+            "waypoint_index": 0,
+            "trips_index": 0
+        },
+        {
+            "distance": 15.615421733306759,
+            "name": "Hämeenpuisto",
+            "location": [
+                23.752337,
+                61.498002
+            ],
+            "waypoint_index": 1,
+            "trips_index": 0
+        }
+    ],
+    "trips": [
+        {
+            "geometry": {
+                "coordinates": [
+                    [
+                        23.759335,
+                        61.498276
+                    ],
+                    [
+                        23.759643,
+                        61.4983
+                    ],
+                    [
+                        23.759776,
+                        61.49838
+                    ],
+                    [
+                        23.759467,
+                        61.499357
+                    ],
+                    [
+                        23.751256,
+                        61.498737
+                    ],
+                    [
+                        23.752078,
+                        61.496065
+                    ],
+                    [
+                        23.752938,
+                        61.496132
+                    ],
+                    [
+                        23.752337,
+                        61.498002
+                    ],
+                    [
+                        23.751635,
+                        61.500152
+                    ],
+                    [
+                        23.752891,
+                        61.500236
+                    ],
+                    [
+                        23.753853,
+                        61.500214
+                    ],
+                    [
+                        23.75464,
+                        61.497913
+                    ],
+                    [
+                        23.759335,
+                        61.498276
+                    ]
+                ],
+                "type": "LineString"
+            },
+            "legs": [
+                {
+                    "summary": "Puutarhakatu, Hämeenpuisto",
+                    "weight": 561.6,
+                    "duration": 385.3,
+                    "steps": [
+                        {
+                            "intersections": [
+                                {
+                                    "out": 0,
+                                    "entry": [
+                                        true
+                                    ],
+                                    "bearings": [
+                                        81
+                                    ],
+                                    "location": [
+                                        23.759335,
+                                        61.498276
+                                    ]
+                                },
+                                {
+                                    "out": 0,
+                                    "in": 1,
+                                    "entry": [
+                                        true,
+                                        false
+                                    ],
+                                    "bearings": [
+                                        45,
+                                        240
+                                    ],
+                                    "location": [
+                                        23.759726,
+                                        61.498324
+                                    ]
+                                }
+                            ],
+                            "driving_side": "right",
+                            "geometry": {
+                                "coordinates": [
+                                    [
+                                        23.759335,
+                                        61.498276
+                                    ],
+                                    [
+                                        23.759583,
+                                        61.498295
+                                    ],
+                                    [
+                                        23.759643,
+                                        61.4983
+                                    ],
+                                    [
+                                        23.759687,
+                                        61.498311
+                                    ],
+                                    [
+                                        23.759726,
+                                        61.498324
+                                    ],
+                                    [
+                                        23.759747,
+                                        61.498336
+                                    ],
+                                    [
+                                        23.759763,
+                                        61.498346
+                                    ],
+                                    [
+                                        23.759771,
+                                        61.49836
+                                    ],
+                                    [
+                                        23.759776,
+                                        61.49838
+                                    ],
+                                    [
+                                        23.759776,
+                                        61.498408
+                                    ],
+                                    [
+                                        23.759775,
+                                        61.498431
+                                    ],
+                                    [
+                                        23.759761,
+                                        61.498489
+                                    ],
+                                    [
+                                        23.759735,
+                                        61.498588
+                                    ],
+                                    [
+                                        23.75965,
+                                        61.498832
+                                    ],
+                                    [
+                                        23.759612,
+                                        61.49894
+                                    ],
+                                    [
+                                        23.759551,
+                                        61.499119
+                                    ],
+                                    [
+                                        23.759516,
+                                        61.499217
+                                    ],
+                                    [
+                                        23.759498,
+                                        61.49927
+                                    ],
+                                    [
+                                        23.759467,
+                                        61.499357
+                                    ]
+                                ],
+                                "type": "LineString"
+                            },
+                            "mode": "driving",
+                            "maneuver": {
+                                "bearing_after": 81,
+                                "bearing_before": 0,
+                                "location": [
+                                    23.759335,
+                                    61.498276
+                                ],
+                                "modifier": "left",
+                                "type": "depart",
+                                "instruction": "Head east on Kauppakatu"
+                            },
+                            "weight": 77.2,
+                            "duration": 46.2,
+                            "name": "Kauppakatu",
+                            "distance": 138.7
+                        },
+                        {
+                            "intersections": [
+                                {
+                                    "out": 2,
+                                    "in": 1,
+                                    "entry": [
+                                        true,
+                                        false,
+                                        true,
+                                        true
+                                    ],
+                                    "bearings": [
+                                        75,
+                                        165,
+                                        255,
+                                        345
+                                    ],
+                                    "location": [
+                                        23.759467,
+                                        61.499357
+                                    ]
+                                },
+                                {
+                                    "out": 2,
+                                    "in": 0,
+                                    "entry": [
+                                        false,
+                                        true,
+                                        true,
+                                        false
+                                    ],
+                                    "bearings": [
+                                        75,
+                                        165,
+                                        255,
+                                        345
+                                    ],
+                                    "location": [
+                                        23.754295,
+                                        61.498971
+                                    ]
+                                },
+                                {
+                                    "out": 2,
+                                    "in": 0,
+                                    "entry": [
+                                        false,
+                                        false,
+                                        true,
+                                        true
+                                    ],
+                                    "bearings": [
+                                        75,
+                                        165,
+                                        255,
+                                        345
+                                    ],
+                                    "location": [
+                                        23.75206,
+                                        61.498797
+                                    ]
+                                }
+                            ],
+                            "driving_side": "right",
+                            "geometry": {
+                                "coordinates": [
+                                    [
+                                        23.759467,
+                                        61.499357
+                                    ],
+                                    [
+                                        23.759268,
+                                        61.499344
+                                    ],
+                                    [
+                                        23.758682,
+                                        61.499302
+                                    ],
+                                    [
+                                        23.758449,
+                                        61.499293
+                                    ],
+                                    [
+                                        23.757549,
+                                        61.499227
+                                    ],
+                                    [
+                                        23.757068,
+                                        61.499172
+                                    ],
+                                    [
+                                        23.756679,
+                                        61.499141
+                                    ],
+                                    [
+                                        23.754295,
+                                        61.498971
+                                    ],
+                                    [
+                                        23.753258,
+                                        61.498891
+                                    ],
+                                    [
+                                        23.752251,
+                                        61.498816
+                                    ],
+                                    [
+                                        23.752198,
+                                        61.49881
+                                    ],
+                                    [
+                                        23.75206,
+                                        61.498797
+                                    ],
+                                    [
+                                        23.751663,
+                                        61.498763
+                                    ],
+                                    [
+                                        23.751256,
+                                        61.498737
+                                    ]
+                                ],
+                                "type": "LineString"
+                            },
+                            "mode": "driving",
+                            "maneuver": {
+                                "bearing_after": 261,
+                                "bearing_before": 350,
+                                "location": [
+                                    23.759467,
+                                    61.499357
+                                ],
+                                "modifier": "left",
+                                "type": "turn",
+                                "instruction": "Turn left onto Puutarhakatu"
+                            },
+                            "weight": 205.9,
+                            "duration": 149.3,
+                            "name": "Puutarhakatu",
+                            "distance": 441.4
+                        },
+                        {
+                            "intersections": [
+                                {
+                                    "out": 1,
+                                    "in": 0,
+                                    "entry": [
+                                        false,
+                                        true,
+                                        true,
+                                        false
+                                    ],
+                                    "bearings": [
+                                        75,
+                                        165,
+                                        255,
+                                        345
+                                    ],
+                                    "location": [
+                                        23.751256,
+                                        61.498737
+                                    ]
+                                },
+                                {
+                                    "out": 0,
+                                    "in": 2,
+                                    "entry": [
+                                        true,
+                                        true,
+                                        false
+                                    ],
+                                    "bearings": [
+                                        165,
+                                        195,
+                                        345
+                                    ],
+                                    "location": [
+                                        23.751494,
+                                        61.497907
+                                    ]
+                                },
+                                {
+                                    "out": 0,
+                                    "in": 2,
+                                    "entry": [
+                                        true,
+                                        false,
+                                        false
+                                    ],
+                                    "bearings": [
+                                        165,
+                                        330,
+                                        345
+                                    ],
+                                    "location": [
+                                        23.751702,
+                                        61.497226
+                                    ]
+                                }
+                            ],
+                            "driving_side": "right",
+                            "geometry": {
+                                "coordinates": [
+                                    [
+                                        23.751256,
+                                        61.498737
+                                    ],
+                                    [
+                                        23.751284,
+                                        61.498651
+                                    ],
+                                    [
+                                        23.751327,
+                                        61.498497
+                                    ],
+                                    [
+                                        23.75146,
+                                        61.498024
+                                    ],
+                                    [
+                                        23.751485,
+                                        61.497928
+                                    ],
+                                    [
+                                        23.751494,
+                                        61.497907
+                                    ],
+                                    [
+                                        23.75156,
+                                        61.497684
+                                    ],
+                                    [
+                                        23.75159,
+                                        61.497604
+                                    ],
+                                    [
+                                        23.751634,
+                                        61.497456
+                                    ],
+                                    [
+                                        23.751646,
+                                        61.497418
+                                    ],
+                                    [
+                                        23.751656,
+                                        61.497382
+                                    ],
+                                    [
+                                        23.751702,
+                                        61.497226
+                                    ],
+                                    [
+                                        23.75172,
+                                        61.497173
+                                    ],
+                                    [
+                                        23.751779,
+                                        61.496988
+                                    ],
+                                    [
+                                        23.751989,
+                                        61.496329
+                                    ],
+                                    [
+                                        23.752044,
+                                        61.496168
+                                    ],
+                                    [
+                                        23.752078,
+                                        61.496065
+                                    ]
+                                ],
+                                "type": "LineString"
+                            },
+                            "mode": "driving",
+                            "maneuver": {
+                                "bearing_after": 171,
+                                "bearing_before": 261,
+                                "location": [
+                                    23.751256,
+                                    61.498737
+                                ],
+                                "modifier": "left",
+                                "type": "turn",
+                                "instruction": "Turn left onto Hämeenpuisto"
+                            },
+                            "weight": 131.4,
+                            "duration": 86.6,
+                            "name": "Hämeenpuisto",
+                            "distance": 300.4
+                        },
+                        {
+                            "intersections": [
+                                {
+                                    "out": 0,
+                                    "in": 3,
+                                    "entry": [
+                                        true,
+                                        true,
+                                        false,
+                                        false
+                                    ],
+                                    "bearings": [
+                                        75,
+                                        165,
+                                        255,
+                                        345
+                                    ],
+                                    "location": [
+                                        23.752078,
+                                        61.496065
+                                    ]
+                                }
+                            ],
+                            "driving_side": "right",
+                            "geometry": {
+                                "coordinates": [
+                                    [
+                                        23.752078,
+                                        61.496065
+                                    ],
+                                    [
+                                        23.752514,
+                                        61.496099
+                                    ],
+                                    [
+                                        23.752938,
+                                        61.496132
+                                    ]
+                                ],
+                                "type": "LineString"
+                            },
+                            "mode": "driving",
+                            "maneuver": {
+                                "bearing_after": 80,
+                                "bearing_before": 170,
+                                "location": [
+                                    23.752078,
+                                    61.496065
+                                ],
+                                "modifier": "left",
+                                "type": "turn",
+                                "instruction": "Turn left onto Hallituskatu"
+                            },
+                            "weight": 50.8,
+                            "duration": 19,
+                            "name": "Hallituskatu",
+                            "distance": 46.3
+                        },
+                        {
+                            "intersections": [
+                                {
+                                    "out": 3,
+                                    "in": 2,
+                                    "entry": [
+                                        true,
+                                        false,
+                                        false,
+                                        true
+                                    ],
+                                    "bearings": [
+                                        75,
+                                        165,
+                                        255,
+                                        345
+                                    ],
+                                    "location": [
+                                        23.752938,
+                                        61.496132
+                                    ]
+                                },
+                                {
+                                    "out": 2,
+                                    "in": 1,
+                                    "entry": [
+                                        true,
+                                        false,
+                                        true
+                                    ],
+                                    "bearings": [
+                                        75,
+                                        165,
+                                        345
+                                    ],
+                                    "location": [
+                                        23.752419,
+                                        61.497754
+                                    ]
+                                }
+                            ],
+                            "driving_side": "right",
+                            "geometry": {
+                                "coordinates": [
+                                    [
+                                        23.752938,
+                                        61.496132
+                                    ],
+                                    [
+                                        23.752915,
+                                        61.496206
+                                    ],
+                                    [
+                                        23.752857,
+                                        61.496392
+                                    ],
+                                    [
+                                        23.752735,
+                                        61.496787
+                                    ],
+                                    [
+                                        23.752663,
+                                        61.496988
+                                    ],
+                                    [
+                                        23.752645,
+                                        61.497043
+                                    ],
+                                    [
+                                        23.752637,
+                                        61.497065
+                                    ],
+                                    [
+                                        23.752619,
+                                        61.49712
+                                    ],
+                                    [
+                                        23.752612,
+                                        61.497138
+                                    ],
+                                    [
+                                        23.752607,
+                                        61.497157
+                                    ],
+                                    [
+                                        23.752598,
+                                        61.497184
+                                    ],
+                                    [
+                                        23.752578,
+                                        61.497249
+                                    ],
+                                    [
+                                        23.752441,
+                                        61.497685
+                                    ],
+                                    [
+                                        23.752419,
+                                        61.497754
+                                    ],
+                                    [
+                                        23.752393,
+                                        61.497838
+                                    ],
+                                    [
+                                        23.752337,
+                                        61.498002
+                                    ]
+                                ],
+                                "type": "LineString"
+                            },
+                            "mode": "driving",
+                            "maneuver": {
+                                "bearing_after": 351,
+                                "bearing_before": 80,
+                                "location": [
+                                    23.752938,
+                                    61.496132
+                                ],
+                                "modifier": "left",
+                                "type": "turn",
+                                "instruction": "Turn left onto Hämeenpuisto"
+                            },
+                            "weight": 96.3,
+                            "duration": 84.19999999999999,
+                            "name": "Hämeenpuisto",
+                            "distance": 210.4
+                        },
+                        {
+                            "intersections": [
+                                {
+                                    "in": 0,
+                                    "entry": [
+                                        true
+                                    ],
+                                    "bearings": [
+                                        171
+                                    ],
+                                    "location": [
+                                        23.752337,
+                                        61.498002
+                                    ]
+                                }
+                            ],
+                            "driving_side": "right",
+                            "geometry": {
+                                "coordinates": [
+                                    [
+                                        23.752337,
+                                        61.498002
+                                    ],
+                                    [
+                                        23.752337,
+                                        61.498002
+                                    ]
+                                ],
+                                "type": "LineString"
+                            },
+                            "mode": "driving",
+                            "maneuver": {
+                                "bearing_after": 0,
+                                "bearing_before": 351,
+                                "location": [
+                                    23.752337,
+                                    61.498002
+                                ],
+                                "modifier": "left",
+                                "type": "arrive",
+                                "instruction": "You have arrived at your 1st destination, on the left"
+                            },
+                            "weight": 0,
+                            "duration": 0,
+                            "name": "Hämeenpuisto",
+                            "distance": 0
+                        }
+                    ],
+                    "distance": 1137.1
+                },
+                {
+                    "summary": "Hämeenpuisto, Näsilinnankatu",
+                    "weight": 378.1,
+                    "duration": 286.1,
+                    "steps": [
+                        {
+                            "intersections": [
+                                {
+                                    "out": 0,
+                                    "entry": [
+                                        true
+                                    ],
+                                    "bearings": [
+                                        351
+                                    ],
+                                    "location": [
+                                        23.752337,
+                                        61.498002
+                                    ]
+                                },
+                                {
+                                    "out": 3,
+                                    "in": 1,
+                                    "entry": [
+                                        false,
+                                        false,
+                                        true,
+                                        true
+                                    ],
+                                    "bearings": [
+                                        75,
+                                        165,
+                                        255,
+                                        345
+                                    ],
+                                    "location": [
+                                        23.75206,
+                                        61.498797
+                                    ]
+                                }
+                            ],
+                            "driving_side": "right",
+                            "geometry": {
+                                "coordinates": [
+                                    [
+                                        23.752337,
+                                        61.498002
+                                    ],
+                                    [
+                                        23.752092,
+                                        61.498714
+                                    ],
+                                    [
+                                        23.75206,
+                                        61.498797
+                                    ],
+                                    [
+                                        23.752032,
+                                        61.498883
+                                    ],
+                                    [
+                                        23.751825,
+                                        61.499545
+                                    ],
+                                    [
+                                        23.751665,
+                                        61.500058
+                                    ],
+                                    [
+                                        23.751635,
+                                        61.500152
+                                    ]
+                                ],
+                                "type": "LineString"
+                            },
+                            "mode": "driving",
+                            "maneuver": {
+                                "bearing_after": 351,
+                                "bearing_before": 0,
+                                "location": [
+                                    23.752337,
+                                    61.498002
+                                ],
+                                "modifier": "left",
+                                "type": "depart",
+                                "instruction": "Head north on Hämeenpuisto"
+                            },
+                            "weight": 122.6,
+                            "duration": 85.5,
+                            "name": "Hämeenpuisto",
+                            "distance": 242
+                        },
+                        {
+                            "intersections": [
+                                {
+                                    "out": 0,
+                                    "in": 1,
+                                    "entry": [
+                                        true,
+                                        false,
+                                        true,
+                                        true
+                                    ],
+                                    "bearings": [
+                                        75,
+                                        165,
+                                        255,
+                                        345
+                                    ],
+                                    "location": [
+                                        23.751635,
+                                        61.500152
+                                    ]
+                                }
+                            ],
+                            "driving_side": "right",
+                            "geometry": {
+                                "coordinates": [
+                                    [
+                                        23.751635,
+                                        61.500152
+                                    ],
+                                    [
+                                        23.751782,
+                                        61.50016
+                                    ],
+                                    [
+                                        23.752891,
+                                        61.500236
+                                    ],
+                                    [
+                                        23.753208,
+                                        61.500205
+                                    ],
+                                    [
+                                        23.753343,
+                                        61.500204
+                                    ],
+                                    [
+                                        23.753456,
+                                        61.500204
+                                    ],
+                                    [
+                                        23.753563,
+                                        61.500205
+                                    ],
+                                    [
+                                        23.753639,
+                                        61.500207
+                                    ],
+                                    [
+                                        23.753853,
+                                        61.500214
+                                    ]
+                                ],
+                                "type": "LineString"
+                            },
+                            "mode": "driving",
+                            "maneuver": {
+                                "bearing_after": 81,
+                                "bearing_before": 350,
+                                "location": [
+                                    23.751635,
+                                    61.500152
+                                ],
+                                "modifier": "right",
+                                "type": "turn",
+                                "instruction": "Turn right onto Satakunnankatu"
+                            },
+                            "weight": 53.1,
+                            "duration": 30.9,
+                            "name": "Satakunnankatu",
+                            "distance": 118.8
+                        },
+                        {
+                            "intersections": [
+                                {
+                                    "out": 2,
+                                    "in": 3,
+                                    "entry": [
+                                        false,
+                                        true,
+                                        true,
+                                        false
+                                    ],
+                                    "bearings": [
+                                        0,
+                                        75,
+                                        165,
+                                        270
+                                    ],
+                                    "location": [
+                                        23.753853,
+                                        61.500214
+                                    ]
+                                },
+                                {
+                                    "out": 1,
+                                    "in": 3,
+                                    "entry": [
+                                        false,
+                                        true,
+                                        true,
+                                        false
+                                    ],
+                                    "bearings": [
+                                        75,
+                                        165,
+                                        255,
+                                        345
+                                    ],
+                                    "location": [
+                                        23.754295,
+                                        61.498971
+                                    ]
+                                }
+                            ],
+                            "driving_side": "right",
+                            "geometry": {
+                                "coordinates": [
+                                    [
+                                        23.753853,
+                                        61.500214
+                                    ],
+                                    [
+                                        23.753877,
+                                        61.500139
+                                    ],
+                                    [
+                                        23.754254,
+                                        61.499052
+                                    ],
+                                    [
+                                        23.754295,
+                                        61.498971
+                                    ],
+                                    [
+                                        23.754323,
+                                        61.498917
+                                    ],
+                                    [
+                                        23.754536,
+                                        61.49825
+                                    ],
+                                    [
+                                        23.754618,
+                                        61.497987
+                                    ],
+                                    [
+                                        23.75464,
+                                        61.497913
+                                    ]
+                                ],
+                                "type": "LineString"
+                            },
+                            "mode": "driving",
+                            "maneuver": {
+                                "bearing_after": 170,
+                                "bearing_before": 84,
+                                "location": [
+                                    23.753853,
+                                    61.500214
+                                ],
+                                "modifier": "right",
+                                "type": "turn",
+                                "instruction": "Turn right onto Näsilinnankatu"
+                            },
+                            "weight": 119.80000000000001,
+                            "duration": 87.1,
+                            "name": "Näsilinnankatu",
+                            "distance": 259.4
+                        },
+                        {
+                            "intersections": [
+                                {
+                                    "out": 0,
+                                    "in": 3,
+                                    "entry": [
+                                        true,
+                                        true,
+                                        false,
+                                        false
+                                    ],
+                                    "bearings": [
+                                        75,
+                                        165,
+                                        255,
+                                        345
+                                    ],
+                                    "location": [
+                                        23.75464,
+                                        61.497913
+                                    ]
+                                }
+                            ],
+                            "driving_side": "right",
+                            "geometry": {
+                                "coordinates": [
+                                    [
+                                        23.75464,
+                                        61.497913
+                                    ],
+                                    [
+                                        23.754768,
+                                        61.497922
+                                    ],
+                                    [
+                                        23.757027,
+                                        61.498098
+                                    ],
+                                    [
+                                        23.759335,
+                                        61.498276
+                                    ]
+                                ],
+                                "type": "LineString"
+                            },
+                            "mode": "driving",
+                            "maneuver": {
+                                "bearing_after": 80,
+                                "bearing_before": 170,
+                                "location": [
+                                    23.75464,
+                                    61.497913
+                                ],
+                                "modifier": "left",
+                                "type": "turn",
+                                "instruction": "Turn left onto Kauppakatu"
+                            },
+                            "weight": 82.6,
+                            "duration": 82.6,
+                            "name": "Kauppakatu",
+                            "distance": 252.4
+                        },
+                        {
+                            "intersections": [
+                                {
+                                    "in": 0,
+                                    "entry": [
+                                        true
+                                    ],
+                                    "bearings": [
+                                        261
+                                    ],
+                                    "location": [
+                                        23.759335,
+                                        61.498276
+                                    ]
+                                }
+                            ],
+                            "driving_side": "right",
+                            "geometry": {
+                                "coordinates": [
+                                    [
+                                        23.759335,
+                                        61.498276
+                                    ],
+                                    [
+                                        23.759335,
+                                        61.498276
+                                    ]
+                                ],
+                                "type": "LineString"
+                            },
+                            "mode": "driving",
+                            "maneuver": {
+                                "bearing_after": 0,
+                                "bearing_before": 81,
+                                "location": [
+                                    23.759335,
+                                    61.498276
+                                ],
+                                "modifier": "left",
+                                "type": "arrive",
+                                "instruction": "You have arrived at your destination, on the left"
+                            },
+                            "weight": 0,
+                            "duration": 0,
+                            "name": "Kauppakatu",
+                            "distance": 0
+                        }
+                    ],
+                    "distance": 872.6
+                }
+            ],
+            "weight_name": "routability",
+            "weight": 939.7,
+            "duration": 671.4000000000001,
+            "distance": 2009.6999999999998
+        }
+    ]
+}

@@ -7,12 +7,12 @@ import {
   ViewChild,
 } from '@angular/core';
 import * as mapboxgl from 'mapbox-gl';
-import { Subscription } from 'rxjs';
+import { fromEvent, Subscription } from 'rxjs';
 import { MapService } from 'src/app/services/map.service';
 import { environment } from 'src/environments/environment';
 import { GeoJson, FeatureCollection, Coordinate } from '../../interfaces/map';
 import { Direction } from 'src/app/interfaces/direction';
-import { ThrowStmt } from '@angular/compiler';
+import { SnackbarService } from 'src/app/services/snackbar.service';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -28,7 +28,7 @@ export class HomeComponent implements OnInit {
   private directions!: mapboxgl.Control | mapboxgl.IControl;
 
   public map!: mapboxgl.Map;
-  private subscription!: Subscription;
+  private subscription!: Subscription[];
 
   private style = 'mapbox://styles/maiska/cl3fu5ycr003d15o41pktkgup';
   private lat = 61.498643;
@@ -53,18 +53,26 @@ export class HomeComponent implements OnInit {
   private latestBbox1!: Coordinate;
   private latestBbox2!: Coordinate;
   private latestCoords!: Coordinate;
+  offlineEvent: any;
 
-  constructor(private mapService: MapService, private directionsService: DirectionsService) {
-    this.subscription = new Subscription();
+  constructor(private mapService: MapService,
+    private directionsService: DirectionsService,
+    private snackbarService: SnackbarService) {
+    // this.subscription.push(new Subscription());
   }
 
   ngOnInit() {
     // TO MAKE THE MAP APPEAR YOU MUST
     // ADD YOUR ACCESS TOKEN FROM
     // https://account.mapbox.com
-    this.subscription.add(
+
+    this.handleAppConnectivityChanges();
+
+    this.subscription.push(
       this.directionsService.directionsArray$.subscribe(
         (directions: Direction[]) => {
+          this.snackbarService.openSnackBar('You Are Offline!');
+
           console.log('subscriber called');
           this.getWholeRouteDriving(directions);
         }
@@ -80,7 +88,9 @@ export class HomeComponent implements OnInit {
     //Called once, before the instance is destroyed.
     //Add 'implements OnDestroy' to the class.
 
-    this.subscription.unsubscribe();
+    this.subscription.forEach((subscription) => {
+      subscription.unsubscribe();
+    })
   }
   /*
     End Of lifecycle hooks
@@ -205,6 +215,19 @@ export class HomeComponent implements OnInit {
     this.buildMap();
   }
 
+
+
+  private handleAppConnectivityChanges(): void {
+
+    this.subscription.push(
+      this.offlineEvent.subscribe(() => {
+      // handle offline mode
+      console.log('Offline...');
+      this.snackbarService.openSnackBar('You Are Offline!');
+    }));
+
+  }
+
   /**
    * Builds a mapboxgl.Map() object to live in this.map.
    * Adds navigation controls and initializes onLoad-method where configurations are given.
@@ -225,6 +248,10 @@ export class HomeComponent implements OnInit {
       maxPitch: 67,
       center: [this.lng, this.lat],
     });
+
+
+    this.offlineEvent = fromEvent(window, 'offline');
+
 
     /// Add map controls
     this.map.addControl(new mapboxgl.NavigationControl());
@@ -751,7 +778,7 @@ export class HomeComponent implements OnInit {
     }
 
     // console.log('directions');
-    console.table(directions);
+    // console.table(directions);
 
     // this.currentPoint = end;
 
@@ -992,14 +1019,21 @@ export class HomeComponent implements OnInit {
     // console.log('json trips');
     // console.log(data);
 
-    // this.distance = Math.ceil(Math.round(data.distance) / 5) * 5;
+    this.distance = Math.ceil(Math.round(data.distance) / 5) * 5;
 
-    // this.distanceToDestination = this.distance.toString();
-    // if (this.distance > 2500) {
-    //   this.distanceToDestination = (data.distance / 1000).toFixed(2);
-    // }
+    this.distanceToDestination = this.distance.toString() + 'm';
+    if (this.distance > 2500) {
+      this.distanceToDestination = (data.distance / 1000).toFixed(2) + 'km';
+    }
 
-    // this.digit = Math.round(Number.parseInt(this.distanceToDestination));
+    this.digit = Math.round(Number.parseInt(this.distanceToDestination));
+
+    console.log(this.distanceToDestination);
+    console.log(this.digit);
+    console.log(json);
+
+    this.mapService.setAppTitle = this.mapService.appTitleString.split('|')[0] + '    |   ' + this.distanceToDestination;
+
 
     var route = data.geometry.coordinates;
 

@@ -1,16 +1,64 @@
-  <div @items class="top-buttons" *ngIf="list[0]">
-    <button md-fab (click)="remove(0)">
-      <mat-icon>remove_circle_outline</mat-icon>
-    </button>
-  </div>
+<div @items class="top-buttons" *ngIf="list[0]">
+  <button md-fab (click)="remove(0)">
+    <mat-icon>remove_circle_outline</mat-icon>
+  </button>
+</div>
 
+<div
+  class="list-container example-list"
+  cdkDropList
+  (cdkDropListDropped)="drop($event)"
+>
+  <ng-container *ngFor="let item of list; let i = index">
+    <div class="flex-container" ngSwitch="i">
+      <!--
+        <div *ngSwitchCase="list[0] == list[i]"
+        class="vertical">↧||||{{i}}</div>
+        <div *ngSwitchCase="1"
+        class="vertical">1||||{{i}}</div>
+        <div *ngSwitchDefault
+        class="vertical">||||{{i}}</div>
+        <div *ngSwitchCase="list[i+1]==undefined"
+        class="vertical">|||end</div> -->
 
-  <div class="list-container example-list"
-  cdkDropList (cdkDropListDropped)="drop($event)">
-    <app-direction @items class="box example-box"
-      *ngFor="let item of list; let i=index;" [item]="item"
-      (itemOutputRemove)="removeFromItem($event)"
-      (itemOutputAdd)="addFromItem($event)"
-      cdkDrag>
-    </app-direction>
-  </div>
+      <ng-container
+        *ngIf="list[0] == list[i]; then thenTemplate; else elseTemplate"
+      ></ng-container>
+      <ng-template #thenTemplate>
+        <div class="vertical" @items>
+          <span>↧</span>||||<span *ngIf="list[i + 1] == undefined">⟂</span>
+          <!-- <span style="writing-mode: horizontal-tb"
+            ><span *ngIf="list[i + 1] !== undefined"
+            >{{
+              getCalculatedDistanceNext(item, i) ?? ''
+            }}km</span
+            ></span
+          > -->
+        </div>
+      </ng-template>
+      <ng-template #elseTemplate>
+        <div class="vertical" @items>
+          |||||<span *ngIf="list[i + 1] == undefined">⟂</span>
+          <span style="writing-mode: horizontal-tb"
+            >{{
+              getCalculatedDistancePrevious(item, i) ?? '-'
+            }}km</span
+          >
+        </div>
+      </ng-template>
+
+      <mat-divider [vertical]="true"> </mat-divider>
+      <app-direction
+        *ngIf="item.id !== 0"
+        @items
+        class="box example-box"
+        [item]="item"
+        [hasDuplicate]="hasDuplicate(item)"
+        (itemOutputRemove)="removeFromItem($event)"
+        (itemOutputAdd)="addFromItem($event)"
+        cdkDrag
+      >
+      </app-direction>
+    </div>
+  </ng-container>
+</div>
