@@ -1,5 +1,6 @@
 import { Direction } from 'src/app/interfaces/direction';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Coordinate } from 'src/app/interfaces/map';
 
 @Component({
   selector: 'app-direction',
@@ -9,6 +10,16 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 export class DirectionComponent implements OnInit {
 
   @Input() item!: Direction;
+  //  = {
+  //   id: -1,
+  //   place_name: "Nowhere Town",
+  //   poi_coords: [0, 0] as unknown as Coordinate,
+  //   clicked_coords: [0, 0] as unknown as Coordinate,
+  //   clicked_bbox1: [0, 0] as unknown as Coordinate,
+  //   clicked_bbox2: [0, 0] as unknown as Coordinate,
+  // };
+  @Input() hasDuplicate: boolean = false;
+
   @Output() itemOutputRemove = new EventEmitter<Direction>();
   @Output() itemOutputAdd = new EventEmitter<Direction>();
 
