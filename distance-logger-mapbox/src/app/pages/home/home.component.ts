@@ -55,9 +55,11 @@ export class HomeComponent implements OnInit {
   private latestCoords!: Coordinate;
   offlineEvent: any;
 
-  constructor(private mapService: MapService,
+  constructor(
+    private mapService: MapService,
     private directionsService: DirectionsService,
-    private snackbarService: SnackbarService) {
+    private snackbarService: SnackbarService
+  ) {
     // this.subscription.push(new Subscription());
   }
 
@@ -77,8 +79,8 @@ export class HomeComponent implements OnInit {
           this.getWholeRouteDriving(directions);
         }
       )
-    )
-    }
+    );
+  }
 
   ngAfterViewInit(): void {
     this.initializeMap();
@@ -90,13 +92,11 @@ export class HomeComponent implements OnInit {
 
     this.subscription.forEach((subscription) => {
       subscription.unsubscribe();
-    })
+    });
   }
   /*
     End Of lifecycle hooks
   */
-
-
 
   /**
    * Calls simulatedClick() with x and y coords from event.
@@ -189,7 +189,7 @@ export class HomeComponent implements OnInit {
         center: coords as mapboxgl.LngLatLike, // eslint-disable-line no-use-before-define
         zoom: 17,
       });
-      }
+    }
   }
 
   /**
@@ -215,17 +215,14 @@ export class HomeComponent implements OnInit {
     this.buildMap();
   }
 
-
-
   private handleAppConnectivityChanges(): void {
-
     this.subscription.push(
       this.offlineEvent.subscribe(() => {
-      // handle offline mode
-      console.log('Offline...');
-      this.snackbarService.openSnackBar('You Are Offline!');
-    }));
-
+        // handle offline mode
+        console.log('Offline...');
+        this.snackbarService.openSnackBar('You Are Offline!');
+      })
+    );
   }
 
   /**
@@ -249,51 +246,14 @@ export class HomeComponent implements OnInit {
       center: [this.lng, this.lat],
     });
 
-
     this.offlineEvent = fromEvent(window, 'offline');
-
 
     /// Add map controls
     this.map.addControl(new mapboxgl.NavigationControl());
-    // MAPBOX NAVIGATION CONTROLS
-    // this.directions = new this.MapboxDirections({
-    //   accessToken: environment.mapbox.accessToken,
-    //   unit: 'metric',
-    //   profile: 'mapbox/walking',
-    //   alternatives: true,
-    //   geometries: 'geojson',
-    //   controls: { inputs:true, instructions: true, profileSwitcher:false },
-    //   flyTo: false,
-    //   language: 'fi'
-    //   });
 
-    //   this.map.addControl(this.directions, "bottom-right");
     this.map.on('click', (event) => {
-      // console.log('this.map.on(click, (event)');
-      // var point = turf.point([23.84629822, 61.44356812]);
-      // var buffered = turf.buffer(point, 5, {units:'kilometers'});
-      // var bbox = turf.bbox(buffered);
-      // console.log(turf.bboxPolygon(bbox));
-      // var features = this.map.queryRenderedFeatures(bbox, {
-      // layers: ['counties']
-      // });
-
-      // Run through the selected features and set a filter
-      // to match features with unique FIPS codes to activate
-      // the `counties-highlighted` layer.
-      // var filter = features.reduce(
-      //   function (memo, feature) {
-      //   memo.push(feature.properties.FIPS);
-      //   return memo;
-      //   },
-      //   ['in', 'FIPS']
-      // );
-
-      //map.setFilter('counties-highlighted', filter);
-
       const coordinates = [event.lngLat.lng, event.lngLat.lat];
       const newMarker = new GeoJson(coordinates, { message: this.message });
-      //console.log(newMarker)
 
       // set bbox as 5px reactangle area around clicked point
       var bboxClick = [
@@ -302,8 +262,6 @@ export class HomeComponent implements OnInit {
         [event.lngLat.lng - 0.0005, event.lngLat.lat - 0.0005],
         [event.lngLat.lng + 0.0005, event.lngLat.lat + 0.0005],
       ];
-
-      //console.log(bbox);
 
       var bboxCoord1: Coordinate = {
         lon: bboxClick[0][0],
@@ -327,8 +285,6 @@ export class HomeComponent implements OnInit {
         };
 
         if (this.inBoundingBox(bboxCoord1, bboxCoord2, elementCoords)) {
-          //  console.log(element);
-          //  console.log('true: ' + countInside);
           markerIndex.add(countInside);
         }
         countInside++;
@@ -336,8 +292,6 @@ export class HomeComponent implements OnInit {
         // 0: 23.76598724
         // 1: 61.50039711
       });
-
-      //var description = "<button class='btn btn-dark' onclick='+${this.getRoute(coordinates)}+'>Button</button>"
 
       const name = '';
       const innerHtmlContent = `<div style="font-size: large;color : black;background: rgba(#2EC4B6, 0.75);
@@ -372,23 +326,7 @@ export class HomeComponent implements OnInit {
         if (this.flyToDestinationChecked) {
           this.flyToCoords(coords);
         }
-      } /*else {this.clicked = !this.clicked}*/
-
-      // markerIndex.forEach(index => {
-      //   console.log(index);
-
-      //   // jokaista napinpainalluksen alueelle sisältyvää kohden fly to nappi
-      //   coords = this.offlineMarkerData[index].geometry.coordinates;
-
-      //   console.log(coords);
-      //   this.messageInBubble = this.offlineMarkerData[index].properties.message;
-      //   //assignBtn.innerHTML = `<button class="btn btn-primary" (click)="flyTo(coords)">noh</button>`;
-      //   assignBtn.innerHTML = `<button class="btn btn-primary" (click)="flyToCoords(coords)">${ this.messageInBubble }</button>`;
-      //   // assignBtn.innerHTML = `<button class="btn btn-success btn-simple text-white" >Do Something</button>`;
-      //   divElement.appendChild(assignBtn);
-      //   console.log(assignBtn);
-
-      // });
+      }
 
       divElement.innerHTML = innerHtmlContent;
       divElement.appendChild(routeBtn);
@@ -397,26 +335,10 @@ export class HomeComponent implements OnInit {
       divElement.appendChild(flyToUser);
       divElement.appendChild(getLocationAddress);
 
-      // btn.className = 'btn';
-
-      // const popup = new mapboxgl.Popup({
-      //     offset: 25
-      //   })
-      //   .setDOMContent(divElement);
-
       var popup = new mapboxgl.Popup()
-        .setLngLat(
-          // this.flyToDestinationChecked
-          //   ? this.clickedBinCoords(markerIndex, coords, coordinates):
-          coordinates as mapboxgl.LngLatLike
-        ) // eslint-disable-line no-use-before-define
-        //.setHTML(description)
+        .setLngLat(coordinates as mapboxgl.LngLatLike) // eslint-disable-line no-use-before-define
         .addTo(this.map)
         .setDOMContent(divElement);
-
-      // console.log(popup)
-      //console.log(description);
-      //console.log();
 
       this.clicked = true;
       // addEventListener
@@ -425,52 +347,43 @@ export class HomeComponent implements OnInit {
         divElement.appendChild(markerNewBtn);
 
         markerNewBtn.addEventListener('click', (e) => {
-          // console.log('Button clicked' + name);
-          // this.mapService.createMarker(newMarker);
           popup.remove();
           this.clicked = false;
         });
       }
 
       addToWaypoints.addEventListener('click', (e) => {
-        // console.log('Button clicked' + name);
         this.waypoints.push(coordinates.toString());
-        // console.log(this.waypoints)
         popup.remove();
         this.clicked = false;
       });
 
       routeBtn.addEventListener('click', (e) => {
-        // console.log('Button clicked' + name);
         this.getRoute(coordinates);
         popup.remove();
         this.clicked = false;
       });
 
       assignBtn.addEventListener('click', (e) => {
-        // console.log('Button clicked' + name);
         this.flyToCoords(coords);
         popup.remove();
         this.clicked = false;
       });
 
       flyToUser.addEventListener('click', (e) => {
-        // console.log('Button clicked' + name);
         this.flyToCoords(this.currentPosition);
         popup.remove();
         this.clicked = false;
       });
 
       getLocationAddress.addEventListener('click', (e) => {
-        // console.log('Button clicked' + name);
         this.getPlaceName(coordinates);
         this.latestBbox1 = bboxCoord1;
         this.latestBbox2 = bboxCoord2;
-        this.latestCoords = (coordinates as unknown as Coordinate);
+        this.latestCoords = coordinates as unknown as Coordinate;
         popup.remove();
         this.clicked = false;
       });
-
 
       var closebtn = document.getElementsByClassName(
         'mapboxgl-popup-close-button'
@@ -479,96 +392,14 @@ export class HomeComponent implements OnInit {
       closebtn[0].addEventListener('click', (e) => {
         this.clicked = false;
       });
-
-      //this.getRoute(coordinates);// mapService.createMarker(newMarker)
-      // console.log(event)
     });
 
     /// Add realtime firebase data on map load'
     //@ts-ignore
     this.map.on('load', (event: any) => {
       this.map.touchZoomRotate.enable();
-      this.map.dragPan
-        .enable
-        // {
-        // // linearity: 0.3, // eslint-disable-line no-use-before-define
-        // // easing: bezier(0, 0, 0.3, 1), // eslint-disable-line no-use-before-define
-        // // maxSpeed: 2000, // eslint-disable-line no-use-before-define
-        // // deceleration: 1500, // eslint-disable-line no-use-before-define
-        // }
-        (); // eslint-disable-line no-use-before-define
+      this.map.dragPan.enable(); // eslint-disable-line no-use-before-define
       this.map.keyboard.enable();
-
-      // var noLocalData: boolean = localStorage.getItem('markers') == null;
-      // // console.log(noLocalData);
-
-      // if (noLocalData) {
-      //   this.markers = this.mapService.getMarkers();
-
-      //   //localStorage.setItem("markers", JSON.stringify(this.markers));
-      //   console.log('did fetch markers from online');
-      // } else {
-      //   this.markers = null;
-      //   this.offlineMarkerData = JSON.parse(localStorage.getItem('markers'));
-      //   this.offlineData = new FeatureCollection(this.offlineMarkerData);
-
-      //   //this.source.setData(offlineData)
-      //   console.log('markers from offline');
-      // }
-
-      /// register source
-      // this.map.addSource('firebase', {
-      //   type: 'geojson',
-      //   data: {
-      //     type: 'FeatureCollection',
-      //     features: [],
-      //   },
-      // });
-
-      // /// get source
-      // this.source = this.map.getSource('firebase');
-
-      // // täytyy laittaa tämä data localstorageen ja jos se löytyy sieltä niin
-      // // OLLA PÄIVITTÄMÄTTÄ UUDESTAAN KAIKKEA
-
-      // if (noLocalData) {
-      //   /// subscribe to realtime database and set data source
-      //   this.markers.valueChanges().subscribe((markers) => {
-      //     var valueChanged: boolean = false;
-
-      //     let data = new FeatureCollection(markers);
-
-      //     this.source.setData(data);
-
-      //     markers.forEach((value) => {
-      //       //console.log(this.markersToDisplay.findIndex(x => x==value.value));
-      //       !this.markersToDisplay.has(value)
-      //         ? (this.markersToDisplay.add(value), (valueChanged = true))
-      //         : console.log('object already exists');
-      //       // console.log(this.markersToDisplay);
-      //       // console.log(value.geometry.coordinates);
-      //     });
-      //     localStorage.setItem('markers', JSON.stringify(markers));
-      //     valueChanged
-      //       ? (localStorage.removeItem('markers'),
-      //         localStorage.setItem('markers', JSON.stringify(markers)))
-      //       : console.log('values didnt change');
-      //     //console.log(this.markersToDisplay)
-      //   });
-      // }
-
-      // if (!noLocalData) {
-      //   this.source.setData(this.offlineData);
-
-      //   this.offlineMarkerData.forEach((value) => {
-      //     //console.log(this.markersToDisplay.findIndex(x => x==value.value));
-      //     !this.markersToDisplay.has(value)
-      //       ? this.markersToDisplay.add(value)
-      //       : console.log('object already exists');
-      //     // console.log(this.markersToDisplay);
-      //     // console.log(value.geometry.coordinates);
-      //   });
-      // }
 
       /// create map layers with realtime data
       this.map.addLayer({
@@ -590,32 +421,11 @@ export class HomeComponent implements OnInit {
       });
 
       // add markers to map
-      // geojson.features.forEach(function (marker) {
-      //   // create a DOM element for the marker
-      //   var el = document.createElement('div');
-      //   el.className = 'marker';
-      //   el.style.backgroundImage =
-      //   'url(https://placekitten.com/g/' +
-      //   marker.properties.iconSize.join('/') +
-      //   '/)';
-      //   el.style.width = marker.properties.iconSize[0] + 'px';
-      //   el.style.height = marker.properties.iconSize[1] + 'px';
-      //   el.style.backgroundSize = '100%';
-
-      //   el.addEventListener('click', function () {
-      //   window.alert(marker.properties.message);
-      //   });
-
-      //   // add marker to map
-      //   new mapboxgl.Marker(el)
-      //   .setLngLat(marker.geometry.coordinates)
-      //   .addTo(map);
-      //   });
+      // TODO
 
       // make an initial directions request that
       // starts and ends at the same location
       var start = [this.lng, this.lat];
-      //this.getRoute(start);
 
       // Add starting point to the map
       this.map.addLayer({
@@ -673,7 +483,7 @@ export class HomeComponent implements OnInit {
       Number.parseFloat(endString[0]),
       Number.parseFloat(endString[1]),
     ];
-    // console.log(end);
+
     // everything in between is gradually added after start but before end
     // on display it should show waypoints with numbers of order
     var waypointsToUrl: string = '';
@@ -715,156 +525,113 @@ export class HomeComponent implements OnInit {
     this.currentDestination = end;
   }
 
-  private getPlaceName(end: any[]): void{
-
+  private getPlaceName(end: any[]): void {
     this.mapService.setAppTitle = '';
 
     // https://api.mapbox.com/geocoding/v5/mapbox.places/{longitude},{latitude}.json
-      var url =
-        'https://api.mapbox.com/geocoding/v5/mapbox.places/' +
-        end[0] +
-        ',' +
-        end[1] +
-        '.json?access_token=' +
-        environment.mapbox.accessToken;
+    var url =
+      'https://api.mapbox.com/geocoding/v5/mapbox.places/' +
+      end[0] +
+      ',' +
+      end[1] +
+      '.json?access_token=' +
+      environment.mapbox.accessToken;
 
-      // make an XHR request https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
-      var req = new XMLHttpRequest();
-      req.open('GET', url, true);
-      req.onload = () => {
-        this.displayPlaceName(req);
-      };
-      req.send();
+    // make an XHR request https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
+    var req = new XMLHttpRequest();
+    req.open('GET', url, true);
+    req.onload = () => {
+      this.displayPlaceName(req);
+    };
+    req.send();
   }
 
   private displayPlaceName(req: XMLHttpRequest) {
     if (!req) return;
     var json = JSON.parse(req.response);
-    console.log(json);
-    // console.log(json.features[0].place_name);
+
     this.mapService.setAppTitle = json.features[0].place_name;
 
     var direction: Direction = {
       id: Math.random(),
       place_name: json.features[0].place_name,
-      poi_coords: json.features[0].geometry.coordinates ?? json.features[0].center,
+      poi_coords:
+        json.features[0].geometry.coordinates ?? json.features[0].center,
       clicked_coords: this.latestCoords,
       clicked_bbox1: this.latestBbox1,
       clicked_bbox2: this.latestBbox2,
     };
 
-    if (this.inBoundingBox(
+    if (
+      this.inBoundingBox(
         direction.clicked_bbox1,
         direction.clicked_bbox2,
-        direction.poi_coords)
-        ) {
+        direction.poi_coords
+      )
+    ) {
       direction.coords = direction.poi_coords;
     } else {
       direction.coords = direction.clicked_coords;
     }
     this.directionsService.addDirection = direction;
-    // if (!this.routeDataSet.has(json.routes[0])) {
-    //   this.routeData.push(json.routes[0]);
-    //   localStorage.setItem('routeData', JSON.stringify(this.routeData));
-    // }
-
   }
 
-  private getWholeRouteDriving(directions: Direction[]): void{
+  private getWholeRouteDriving(directions: Direction[]): void {
     if (directions.length < 2) {
       this.map.removeLayer('route');
       this.map.removeSource('route');
       return;
     }
 
-    // console.log('directions');
-    // console.table(directions);
-
-    // this.currentPoint = end;
-
     navigator.geolocation.getCurrentPosition((position) => {
       this.lat = position.coords.latitude;
       this.lng = position.coords.longitude;
     });
 
-    // var start = [this.lng, this.lat];
+    // https://api.mapbox.com/optimized-trips/v1/{profile}/{coordinates}
 
-    // if (!(this.currentPosition == start && this.currentDestination == end)) {
-    //   this.currentPosition = start;
+    var coordinteString = '';
+    var comma = ',';
+    var separator = ';';
+    var latestCoords: number[] = [];
 
+    for (const key in directions) {
+      if (Object.prototype.hasOwnProperty.call(directions, key)) {
+        const direction: any = directions[key];
 
-      // https://api.mapbox.com/optimized-trips/v1/{profile}/{coordinates}
-
-      var coordinteString = '';
-      var comma = ',';
-      var separator = ';';
-      var latestCoords: number[] = [];
-
-      for (const key in directions) {
-
-        if (Object.prototype.hasOwnProperty.call(directions, key)) {
-          // console.log(directions);
-          // console.log(directions[key]);
-
-          const direction: any = directions[key];
-
-          if (latestCoords != direction.poi_coords){
-            coordinteString +=  '' +
+        if (latestCoords != direction.poi_coords) {
+          coordinteString +=
+            '' +
             direction.poi_coords[0].toFixed(6) +
             comma +
             direction.poi_coords[1].toFixed(6) +
             separator;
-          }
-          latestCoords = direction.poi_coords;
         }
+        latestCoords = direction.poi_coords;
       }
+    }
 
-      coordinteString = coordinteString.substring(0,coordinteString.length-1);
+    coordinteString = coordinteString.substring(0, coordinteString.length - 1);
 
+    var url =
+      'https://api.mapbox.com/optimized-trips/v1/mapbox/driving/' +
+      coordinteString +
+      '?steps=true&geometries=geojson&access_token=' +
+      environment.mapbox.accessToken;
 
-      // directions.forEach((direction, index) => {
-      //   console.log('direction');
-      //   console.log(direction);
+    // make an XHR request https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
+    var req = new XMLHttpRequest();
+    req.open('GET', url, true);
+    req.onload = () => {
+      // Do something with the retrieved data ( found in xmlhttp.response )
+      this.wholeRouteFunction(req);
+    };
+    req.send();
 
-      //   coordinteString += '' +
-      //   direction.poi_coords.lat.toFixed(6) +
-      //   comma +
-      //   direction.poi_coords.lon.toFixed(6)
-      //   ;
-      //   // if (!directions[index+1]) coordinteString += separator;
-      //   // if (!directions[index+1])
-      // });
-      // console.log('coordinteString')
-
-      // console.log(coordinteString)
-
-      var url =
-        'https://api.mapbox.com/optimized-trips/v1/mapbox/driving/' +
-        coordinteString +
-        '?steps=true&geometries=geojson&access_token=' +
-        environment.mapbox.accessToken;
-
-        // console.log(url);
-
-      // make an XHR request https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
-      var req = new XMLHttpRequest();
-      req.open('GET', url, true);
-      req.onload = () => {
-        // Do something with the retrieved data ( found in xmlhttp.response )
-        this.wholeRouteFunction(req);
-      };
-      req.send();
-
-      this.latestReq = req;
-    // }
-    // else {
-    //   this.wholeRouteFunction(this.latestReq!);
-    // }
-    // this.currentDestination = end;
-    // this.destination = 'Roskis';
+    this.latestReq = req;
   }
 
-  private getRouteDriving(end: any): void{
+  private getRouteDriving(end: any): void {
     this.currentPoint = end;
 
     navigator.geolocation.getCurrentPosition((position) => {
@@ -906,14 +673,12 @@ export class HomeComponent implements OnInit {
     this.destination = 'Roskis';
   }
 
-  private getRoute(end: any): void{
+  private getRoute(end: any): void {
     // make a directions request using walking profile
     // an arbitrary start will always be the same
     // only the end or destination will change
     this.currentPoint = end;
     // if (localStorage.getItem("routeData")  !== null ) var obj = (localStorage.getItem("routeData"));
-
-    // console.log(obj);
 
     navigator.geolocation.getCurrentPosition((position) => {
       this.lat = position.coords.latitude;
@@ -922,40 +687,9 @@ export class HomeComponent implements OnInit {
 
     var start = [this.lng, this.lat];
 
-    // this.map.addLayer({
-    //   id: 'point',
-    //   type: 'circle',
-    //   source: {
-    //     type: 'geojson',
-    //     data: {
-    //       type: 'FeatureCollection',
-    //       features: [{
-    //         type: 'Feature',
-    //         properties: {},
-    //         geometry: {
-    //           type: 'Point',
-    //           coordinates: start
-    //         }
-    //       }
-    //       ]
-    //     }
-    //   },
-    //   paint: {
-    //     'circle-radius': 10,
-    //     'circle-color': '#3887be',
-    //     'circle-stroke-color': 'black',
-    //     'circle-stroke-width': 1,
-    //   }
-    // });
-
-    ///////////////////////////////////////////////////
     // Täytyy katsoa distance dataa ja päätellä mikä roskis on lähinnä
     // tään jälkeen valita se reitiksi ja esittää  reitti
 
-    //   console.log(start);
-    //   console.log(this.currentPosition);
-    // console.log(end);
-    // console.log(this.currentDestination);
     if (!(this.currentPosition == start && this.currentDestination == end)) {
       this.currentPosition = start;
 
@@ -970,7 +704,6 @@ export class HomeComponent implements OnInit {
         end[1] +
         '?steps=true&geometries=geojson&access_token=' +
         environment.mapbox.accessToken;
-      //var bool: Observable<boolean>;
 
       // if one would use mapbox directions api
       //   let directions = new MapboxDirections({
@@ -985,8 +718,6 @@ export class HomeComponent implements OnInit {
       var req = new XMLHttpRequest();
       req.open('GET', url, true);
       req.onload = () => {
-        //console.log(req)
-        //test(req)
         this.routeFunction(req);
         //bool.
         // Do something with the retrieved data ( found in xmlhttp.response )
@@ -1005,19 +736,12 @@ export class HomeComponent implements OnInit {
     if (!req) return;
     var json = JSON.parse(req.response);
 
-    // console.log(json);
-    // console.table(json);
-
     // if (!this.routeDataSet.has(json.routes[0])) {
     //   this.routeData.push(json.routes[0]);
     //   localStorage.setItem('routeData', JSON.stringify(this.routeData));
     // }
 
-    // this.routeActivated = true;
-
     var data = json.trips[0];
-    // console.log('json trips');
-    // console.log(data);
 
     this.distance = Math.ceil(Math.round(data.distance) / 5) * 5;
 
@@ -1028,12 +752,10 @@ export class HomeComponent implements OnInit {
 
     this.digit = Math.round(Number.parseInt(this.distanceToDestination));
 
-    console.log(this.distanceToDestination);
-    console.log(this.digit);
-    console.log(json);
-
-    this.mapService.setAppTitle = this.mapService.appTitleString.split('|')[0] + '    |   ' + this.distanceToDestination;
-
+    this.mapService.setAppTitle =
+      this.mapService.appTitleString.split('|')[0] +
+      '    |   ' +
+      this.distanceToDestination;
 
     var route = data.geometry.coordinates;
 
@@ -1049,16 +771,15 @@ export class HomeComponent implements OnInit {
         coordinates: route,
       },
     };
+
     // if the route already exists on the map, reset it using setData
     if (this.map.getSource('route')) {
       const source: mapboxgl.GeoJSONSource = this.map.getSource(
         'route'
       ) as mapboxgl.GeoJSONSource;
-      // console.log('on top of old');
 
       source.setData(geojsonFeature); // eslint-disable-line no-use-before-define
     } else {
-      // console.log('new request');
       // otherwise, make a new request
       this.map.addLayer({
         id: 'route',
@@ -1161,7 +882,10 @@ export class HomeComponent implements OnInit {
     // add turn instructions here at the end
   }
 
-  private getNearestPoint(fromCoordindexes: any[], pointCoordinates: any[]): number {
+  private getNearestPoint(
+    fromCoordindexes: any[],
+    pointCoordinates: any[]
+  ): number {
     // Return index of nearest point
     var arrayOfMatches: any[] = [];
     var routeLengths: any[] = [[], []]; //: Set<any> = new Set();
@@ -1187,13 +911,10 @@ export class HomeComponent implements OnInit {
       const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
       const d = R * c; // in metres
-      // console.log(element.geometry.coordinates);
-      // console.log(d);
-      // routeLengths.add([index, d]);
+
       routeLengths[1].push(d);
     } //)
     var arrayOfLenghts = routeLengths; // etäisyys bboxin sisällä olevista roskiksista
-    //var markersOfLenghts = Array.from(this.markersToDisplay);
     var shortest = Math.min(...routeLengths[1]);
     var indexOfShortest = arrayOfLenghts[1].findIndex(
       (x: number) => x == shortest
@@ -1215,5 +936,4 @@ export class HomeComponent implements OnInit {
 
     return p.lat >= bl.lat && p.lat <= tr.lat && isLongInRange;
   }
-
 }

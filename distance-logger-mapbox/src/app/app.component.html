@@ -6,36 +6,40 @@
     position="end"
     role="navigation"
     class="mat-elevation-z8"
-    [class.big-nav] = "getIsHelpWanted && isBigScreen"
+    [class.big-nav]="getIsHelpWanted && isBigScreen"
   >
-      <button
+    <button
       mat-button
       (click)="getNavSticky ? null : sidenav2.toggle()"
       class="close-sidenav2-2"
-    >        <mat-icon> close </mat-icon>
+    >
+      <mat-icon> close </mat-icon>
     </button>
 
-    <mat-checkbox *ngIf="!getIsBigScreen" class="close-sidenav2"
+    <mat-checkbox
+      *ngIf="!getIsBigScreen"
+      class="close-sidenav2"
       [checked]="getNavSticky"
       [color]="color"
-      (change)="setNavSticky($event.checked)">
-      <!--  *ngIf="sidenavOver" -->
-      <!-- [indeterminate]="someComplete()" -->
-      <!-- {{task.name}} -->
+      (change)="setNavSticky($event.checked)"
+    >
+
       <!-- Sticky Navigation -->
-    <mat-icon *ngIf="getNavSticky">lock</mat-icon>
-    <mat-icon *ngIf="!getNavSticky">lock_open</mat-icon>
+      <mat-icon *ngIf="getNavSticky">lock</mat-icon>
+      <mat-icon *ngIf="!getNavSticky">lock_open</mat-icon>
     </mat-checkbox>
 
     <span [ngSwitch]="getIsHelpWanted">
-    <app-sidenav-help *ngSwitchCase="true" @fadeSlideInOut>
-      <!-- AAPPUUUVA! -->
-    </app-sidenav-help>
-    <app-sidenav-directions *ngSwitchCase="false" @fadeSlideInOut
-      (listOutput)="direction"
-    >
-      <!-- Ajosuunnitelma -->
-    </app-sidenav-directions>
+      <app-sidenav-help *ngSwitchCase="true" @fadeSlideInOut>
+        <!-- AAPPUUUVA! -->
+      </app-sidenav-help>
+      <app-sidenav-directions
+        *ngSwitchCase="false"
+        @fadeSlideInOut
+        (listOutput)="(direction)"
+      >
+        <!-- Ajosuunnitelma -->
+      </app-sidenav-directions>
     </span>
 
     <div>
@@ -43,38 +47,42 @@
     </div>
   </mat-sidenav>
 
-<!-- TÄHÄN LOPPUU ITSE SIDENAVI OHJEILLE JA NAVIGAATIOLLE -->
+  <!-- TÄHÄN LOPPUU ITSE SIDENAVI OHJEILLE JA NAVIGAATIOLLE -->
 
   <mat-sidenav-content class="drawer-contents">
-
-  <mat-toolbar class="mat-elevation-z8">
+    <mat-toolbar class="mat-elevation-z8">
       <button
         mat-icon-button
         *ngIf="sidenav.mode === 'over'"
         (click)="sidenav.toggle()"
       >
-
         <mat-icon *ngIf="!sidenav.opened"> menu </mat-icon>
         <mat-icon *ngIf="sidenav.opened"> close </mat-icon>
       </button>
 
       <span [ngSwitch]="appTitle.length > 0">
-      <ng-container  *ngSwitchCase="true">
-       {{appTitle}}
-      </ng-container >
-      <ng-container  *ngSwitchCase="false">
-        <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
-      </ng-container>
+        <ng-container *ngSwitchCase="true">
+          {{ appTitle }}
+        </ng-container>
+        <ng-container *ngSwitchCase="false">
+          <div class="lds-ellipsis">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+        </ng-container>
       </span>
-
     </mat-toolbar>
 
     <mat-sidenav-container>
       <mat-sidenav #sidenav="matSidenav" class="mat-elevation-z8">
-        <button class="close-sidenav"
+        <button
+          class="close-sidenav"
           mat-icon-button
           (click)="sidenav.toggle()"
-        ><mat-icon>close</mat-icon>
+        >
+          <mat-icon>close</mat-icon>
         </button>
         <img
           class="avatar mat-elevation-z8"
@@ -109,40 +117,18 @@
         <!-- NAPPULA AVAAMAAN TOISEN SIDENAVIN - PARENT MENUN-->
 
         <button
-        mat-button
-        (click)="navSticky ? null : openSwitchPanel()"
-        class="toggle-Mbtn new--item menu-button"
-      >
-       <!--  (click)="navSticky ? null : openDirectionPanel()" -->
+          mat-button
+          (click)="navSticky ? null : openSwitchPanel()"
+          class="toggle-Mbtn new--item menu-button"
+        >
+          <!--  (click)="navSticky ? null : openDirectionPanel()" -->
 
-      <mat-icon> directions</mat-icon>
-      Ajosuunnitelma
-      <mat-icon *ngIf="getNavSticky">lock</mat-icon>
-      </button>
-
+          <mat-icon> directions</mat-icon>
+          Ajosuunnitelma
+          <mat-icon *ngIf="getNavSticky">lock</mat-icon>
+        </button>
       </mat-sidenav>
       <mat-sidenav-content>
-        <!-- <mat-toolbar
-        role="toolbar"
-        class="main-header mat-elevation-z1 sticky-header"
-      >
-        <mat-toolbar-row>
-          <h2 class="header-text header-block">This is Dashboard</h2>
-          <span class="flex-spacer"></span>
-          <button mat-icon-button>
-            <mat-icon class="color-white">search</mat-icon>
-          </button>
-          <button mat-icon-button [matMenuTriggerFor]="menu">
-            <mat-icon class="color-white">more_vert</mat-icon>
-          </button>
-          <mat-menu #menu="matMenu" [overlapTrigger]="false">
-            <button mat-menu-item>
-              <mat-icon>power_settings_new</mat-icon>
-              <span>Logout</span>
-            </button>
-          </mat-menu>
-        </mat-toolbar-row>
-      </mat-toolbar>
 
       <div>main board</div> -->
         <div class="content mat-elevation-z8">
@@ -150,6 +136,5 @@
         </div>
       </mat-sidenav-content>
     </mat-sidenav-container>
-
-</mat-sidenav-content>
+  </mat-sidenav-content>
 </mat-sidenav-container>
