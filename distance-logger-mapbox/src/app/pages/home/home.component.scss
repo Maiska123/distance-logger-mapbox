@@ -1,6 +1,6 @@
 .bg {
- background-image: url('../../../assets/map.jpg');
- height: -webkit-fill-available;
+  background-image: url('../../../assets/map.jpg');
+  height: -webkit-fill-available;
 }
 
 .box {
@@ -18,5 +18,7 @@
   border-radius: 10px;
 }
 
-body { margin: 0; padding: 0; }
-// #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+body {
+  margin: 0;
+  padding: 0;
+}
