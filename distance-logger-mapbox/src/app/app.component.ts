@@ -6,7 +6,16 @@ import { delay, filter } from 'rxjs/operators';
 import { NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ThemePalette } from '@angular/material/core';
-import { trigger, state, style, transition, animate, query, animateChild, group } from '@angular/animations';
+import {
+  trigger,
+  state,
+  style,
+  transition,
+  animate,
+  query,
+  animateChild,
+  group,
+} from '@angular/animations';
 import { Subscription } from 'rxjs';
 import { Direction } from './interfaces/direction';
 @UntilDestroy()
@@ -19,37 +28,26 @@ import { Direction } from './interfaces/direction';
       state(
         'default',
         style({
-			opacity: 1,
-		})
-	),
-	state(
-		'disabled',
-		style({
-			opacity: 0.5,
+          opacity: 1,
+        })
+      ),
+      state(
+        'disabled',
+        style({
+          opacity: 0.5,
         })
       ),
       transition('* => *', animate('300ms ease')),
     ]),
-  trigger('fadeSlideInOut', [
-    transition(':enter', [
-      style({ opacity: 0 }),
-      animate('500ms ease-in', style({ opacity: 1 })),
+    trigger('fadeSlideInOut', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('500ms ease-in', style({ opacity: 1 })),
+      ]),
+      transition(':leave', [animate('100ms', style({ opacity: 0 }))]),
     ]),
-    transition(':leave', [
-      animate('100ms', style({ opacity: 0 })),
-    ]),
-  ]),
-  ]
+  ],
 })
-    // transition('* => *', [
-    //   query(':enter', [
-    //     style({ opacity: 0 }),
-    //     stagger(100, [
-    //       animate('500ms ease-in', style({ opacity: 1 })),
-    //     ])
-    //   ]
-    //   )
-    // ]),
 export class AppComponent {
   title = 'distance-logger-mapbox';
 
@@ -71,7 +69,7 @@ export class AppComponent {
   public direction: Direction[] = [];
   // private subscription: Subscription | undefined;
 
-  public set setHelpWanted(bool:any) {
+  public set setHelpWanted(bool: any) {
     this.helpWanted = bool;
     this.directionsWanted = !bool;
     // this.sidenav.toggle();
@@ -81,7 +79,7 @@ export class AppComponent {
     return this.helpWanted;
   }
 
-  public set setIsBigScreen(bool:any) {
+  public set setIsBigScreen(bool: any) {
     this.isBigScreen = bool;
   }
 
@@ -94,39 +92,42 @@ export class AppComponent {
   }
 
   public get sidenavOver(): boolean {
-    return this.sidenav!! ? (this.sidenav.mode === 'over') : false
-  };
+    return this.sidenav!! ? this.sidenav.mode === 'over' : false;
+  }
 
-  public setNavSticky(event:boolean): void {
+  public setNavSticky(event: boolean): void {
     this.navSticky = event;
-    if (event && !this.isBigScreen) this.sidenav.mode = 'side'
+    if (event && !this.isBigScreen) this.sidenav.mode = 'side';
     else if (!event && !this.isBigScreen) this.sidenav.mode = 'over';
-  };
+  }
 
-  public openSwitchPanel(withHelp? :boolean) {
+  public openSwitchPanel(withHelp?: boolean) {
     if (this.navSticky) return;
     this.sidenavManualclose = true;
-    withHelp ? this.setHelpWanted = true : this.setHelpWanted = false;
+    withHelp ? (this.setHelpWanted = true) : (this.setHelpWanted = false);
     if (!this.sidenav.opened) this.sidenav.toggle();
   }
 
   public color: ThemePalette = 'primary';
 
-  constructor(private observer: BreakpointObserver, private router: Router, private mapService: MapService) {
+  constructor(
+    private observer: BreakpointObserver,
+    private router: Router,
+    private mapService: MapService
+  ) {
     this.subscription = new Subscription();
   }
 
   ngOnInit(): void {
     this.subscription.add(
-
       this.mapService.appTitle.subscribe((newTitle) => {
         this.appTitle = newTitle;
       })
-    )
+    );
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe()
+    this.subscription.unsubscribe();
   }
 
   ngAfterViewInit() {
@@ -157,20 +158,5 @@ export class AppComponent {
           this.sidenav.close();
         }
       });
-
-      // this.sidenav.closedStart.subscribe(()=> {
-      //   this.sidenavclosing = true;
-      // });
-
-      // this.sidenav.openedStart.subscribe(()=> {
-      //   this.sidenavclosing = false;
-      // });
-
-      // this.sidenav._animationEnd.subscribe(()=> {
-      //   if(this.sidenavclosing && (this.getIsHelpWanted || this.directionsWanted) && !this.sidenavManualclose) {
-      //     this.sidenavManualclose = false;
-      //     this.sidenav.toggle(true,'program');
-      //   }
-      // });
   }
 }
