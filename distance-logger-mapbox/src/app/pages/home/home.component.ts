@@ -13,6 +13,7 @@ import { environment } from 'src/environments/environment';
 import { GeoJson, FeatureCollection, Coordinate } from '../../interfaces/map';
 import { Direction } from 'src/app/interfaces/direction';
 import { SnackbarService } from 'src/app/services/snackbar.service';
+import { LinkedList } from 'src/app/interfaces/linked-list';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -28,7 +29,7 @@ export class HomeComponent implements OnInit {
   private directions!: mapboxgl.Control | mapboxgl.IControl;
 
   public map!: mapboxgl.Map;
-  private subscription!: Subscription[];
+  private subscription: Subscription = new Subscription();
 
   private style = 'mapbox://styles/maiska/cl3fu5ycr003d15o41pktkgup';
   private lat = 61.498643;
@@ -53,14 +54,105 @@ export class HomeComponent implements OnInit {
   private latestBbox1!: Coordinate;
   private latestBbox2!: Coordinate;
   private latestCoords!: Coordinate;
-  offlineEvent: any;
+  private offlineEvent: any;
+  private onlineEvent: any;
+  private directionsHelper: Direction[] = [];
 
   constructor(
     private mapService: MapService,
     private directionsService: DirectionsService,
     private snackbarService: SnackbarService
   ) {
-    // this.subscription.push(new Subscription());
+    this.subscription.add(
+      this.directionsService.getClickEvent().subscribe((item: any) => {
+        this.flyToCoords(item.poi_coords ?? item.coords);
+      })
+    );
+
+    this.subscription.add(
+      this.directionsService.addresses$.subscribe((direction: Direction[]) => {
+        // this.snackbarService.openSnackBar('You Are Offline!');
+        // this.waypoints = [];
+        // direction.forEach((item: Direction) => {
+        //   if (item.poi_coords.lat && item.poi_coords.lon) this.waypoints.push(item.poi_coords.lon + ',' + item.poi_coords.lat);
+        // });
+
+        if (
+          direction.length > 1 &&
+          this.directionsHelper.length == direction.length
+        ) {
+          this.directionsHelper = direction;
+          this.waypoints = [];
+
+          this.directionsHelper.forEach((item: any) => {
+            if (
+              (item.poi_coords[0] && item.poi_coords[1]) ||
+              (item.clicked_coords[0] && item.clicked_coords[1])
+            ) {
+              this.waypoints.push(
+                (item.poi_coords[0].toFixed(7) ??
+                  item.clicked_coords[0].toFixed(7)) +
+                  ',' +
+                  (item.poi_coords[1].toFixed(7) ??
+                    item.clicked_coords[1].toFixed(7))
+              );
+            }
+          });
+
+          try {
+            var breakingString: string[] =
+              this.waypoints[this.waypoints.length - 1].split(','); // if length is 1, it will be the last one
+
+            var breakingParse = [
+              Number.parseFloat(breakingString[0]),
+              Number.parseFloat(breakingString[1]),
+            ];
+
+            if (
+              this.waypoints.length > 0 &&
+              breakingParse[0] &&
+              breakingParse[1]
+            ) {
+              this.directionsWithWaypoints();
+            }
+          } catch (error) {
+            console.error(error);
+            this.clearDirectionsWithWaypoints(); // if error, clear the route
+          }
+        } else if (direction.length == 0) {
+          this.waypoints = [];
+          this.clearDirectionsWithWaypoints(); // if empty, clear the route
+        } else {
+          this.directionsHelper = direction;
+        }
+
+        // if (this.waypoints.length > 0) this.directionsWithWaypoints();
+        // this.getWholeRouteDriving(direction);
+      })
+    );
+  }
+
+  clearDirectionsWithWaypoints() {
+    // if (this.map.getLayer('route')) this.map.removeLayer('route');
+
+    const geojsonFeature = {
+      type: 'Feature' as const,
+      properties: {
+        name: 'route',
+        amenity: 'Custom Route',
+        popupContent: 'Route',
+      },
+      geometry: {
+        type: 'LineString' as const,
+        coordinates: [],
+      },
+    };
+
+    // if the route already exists on the map, reset it using setData
+    let source = this.map.getSource('route') as mapboxgl.GeoJSONSource;
+    if (source) {
+      source.setData(geojsonFeature); // eslint-disable-line no-use-before-define
+    }
   }
 
   ngOnInit() {
@@ -69,30 +161,27 @@ export class HomeComponent implements OnInit {
     // https://account.mapbox.com
 
     this.handleAppConnectivityChanges();
-
-    this.subscription.push(
-      this.directionsService.directionsArray$.subscribe(
-        (directions: Direction[]) => {
-          this.snackbarService.openSnackBar('You Are Offline!');
-
-          console.log('subscriber called');
-          this.getWholeRouteDriving(directions);
-        }
-      )
-    );
   }
 
   ngAfterViewInit(): void {
     this.initializeMap();
+
+    // let leftGarbage =
+    document.getElementsByClassName('mapboxgl-ctrl-bottom-left')[0].innerHTML =
+      '';
+    document.getElementsByClassName('mapboxgl-ctrl-bottom-right')[0].innerHTML =
+      '';
+    // leftGarbage.innerHTML = "";
+    // rightGarbage.innerHTML = "";
+
+    // (myRow.querySelector('.myClass') as HTMLInputElement).value = " a vaule";
   }
 
   ngOnDestroy(): void {
     //Called once, before the instance is destroyed.
     //Add 'implements OnDestroy' to the class.
 
-    this.subscription.forEach((subscription) => {
-      subscription.unsubscribe();
-    });
+    this.subscription.unsubscribe();
   }
   /*
     End Of lifecycle hooks
@@ -216,11 +305,22 @@ export class HomeComponent implements OnInit {
   }
 
   private handleAppConnectivityChanges(): void {
-    this.subscription.push(
+    this.offlineEvent = fromEvent(window, 'offline');
+    this.onlineEvent = fromEvent(window, 'online');
+
+    this.subscription.add(
       this.offlineEvent.subscribe(() => {
         // handle offline mode
-        console.log('Offline...');
-        this.snackbarService.openSnackBar('You Are Offline!');
+
+        this.snackbarService.openPersistentSnackBar('You Are Offline!');
+      })
+    );
+
+    this.subscription.add(
+      this.onlineEvent.subscribe(() => {
+        // handle offline mode
+
+        this.snackbarService.openSnackBar('You Are Online!');
       })
     );
   }
@@ -245,8 +345,6 @@ export class HomeComponent implements OnInit {
       maxPitch: 67,
       center: [this.lng, this.lat],
     });
-
-    this.offlineEvent = fromEvent(window, 'offline');
 
     /// Add map controls
     this.map.addControl(new mapboxgl.NavigationControl());
@@ -288,30 +386,58 @@ export class HomeComponent implements OnInit {
           markerIndex.add(countInside);
         }
         countInside++;
-        //  console.log(element.geometry.coordinates);
+
         // 0: 23.76598724
         // 1: 61.50039711
       });
 
       const name = '';
-      const innerHtmlContent = `<div style="font-size: large;color : black;background: rgba(#2EC4B6, 0.75);
+      const innerHtmlContent = `<div class="nav" style="font-size: large;color : black;background: rgba(#2EC4B6, 0.75);
     border-top: 5px solid rgba(#2EC4B6,0.75)">
                 <h4 class="h4Class">${name} </h4> </div>`;
 
       const divElement = document.createElement('div');
-      const routeBtn = document.createElement('div');
-      const markerNewBtn = document.createElement('div');
-      const assignBtn = document.createElement('div');
-      const addToWaypoints = document.createElement('div');
-      const flyToUser = document.createElement('div');
-      const getLocationAddress = document.createElement('div');
+      divElement.className = 'nav';
+      const ulContainer = document.createElement('ul');
+      ulContainer.className = 'radial-nav';
+      const routeBtn = document.createElement('li');
+      routeBtn.className = 'li';
+      const markerNewBtn = document.createElement('li');
+      markerNewBtn.className = 'li';
+      const assignBtn = document.createElement('li');
+      assignBtn.className = 'li';
+      const addToWaypoints = document.createElement('li');
+      addToWaypoints.className = 'li';
+      const flyToUser = document.createElement('li');
+      flyToUser.className = 'li';
+      const getLocationAddress = document.createElement('li');
+      getLocationAddress.className = 'li';
+
+      const dummy1 = document.createElement('li');
+      dummy1.className = 'li';
+      const dummy2 = document.createElement('li');
+      dummy2.className = 'li';
+      const dummy3 = document.createElement('li');
+      dummy3.className = 'li';
+      const dummy4 = document.createElement('li');
+      dummy4.className = 'li';
+      ulContainer.appendChild(addToWaypoints);
+      ulContainer.appendChild(dummy1);
+      ulContainer.appendChild(routeBtn);
+      ulContainer.appendChild(dummy2);
+      ulContainer.appendChild(markerNewBtn);
+      ulContainer.appendChild(dummy3);
+      ulContainer.appendChild(flyToUser);
+      ulContainer.appendChild(dummy4);
+      ulContainer.appendChild(getLocationAddress);
+
       var coords: any;
 
-      addToWaypoints.innerHTML = `<button class="btn btn-success btn-simple text-white" >Add a Waypoint</button>`;
-      routeBtn.innerHTML = `<button class="btn btn-success btn-simple text-white" >Get Route</button>`;
-      markerNewBtn.innerHTML = `<button class="btn btn-success btn-simple text-white" >New Marker</button>`;
-      flyToUser.innerHTML = `<button class="btn btn-success btn-simple text-white" >Fly To User</button>`;
-      getLocationAddress.innerHTML = `<button class="btn btn-success btn-simple text-white" >Get Address</button>`;
+      addToWaypoints.innerHTML = `<button class="menu-button btn swipe-overlay btn-success btn-simple text-white" >Add a Waypoint</button>`;
+      routeBtn.innerHTML = `<button class="menu-button btn swipe-overlay btn-success btn-simple text-white" >Get Route</button>`;
+      markerNewBtn.innerHTML = `<button class="menu-button btn swipe-overlay btn-success btn-simple text-white" >New Marker</button>`;
+      flyToUser.innerHTML = `<button class="menu-button btn swipe-overlay btn-success btn-simple text-white" >Fly To User</button>`;
+      getLocationAddress.innerHTML = `<button class="menu-button btn swipe-overlay btn-success btn-simple text-white" >Get Address</button>`;
 
       if (Array.from(markerIndex)[0]) {
         var nearestPointIndex = this.getNearestPoint(
@@ -328,12 +454,13 @@ export class HomeComponent implements OnInit {
         }
       }
 
-      divElement.innerHTML = innerHtmlContent;
-      divElement.appendChild(routeBtn);
-      divElement.appendChild(addToWaypoints);
-      divElement.appendChild(assignBtn);
-      divElement.appendChild(flyToUser);
-      divElement.appendChild(getLocationAddress);
+      // divElement.innerHTML = innerHtmlContent;
+      divElement.appendChild(ulContainer);
+      // divElement.appendChild(routeBtn);
+      // divElement.appendChild(addToWaypoints);
+      // divElement.appendChild(assignBtn);
+      // divElement.appendChild(flyToUser);
+      // divElement.appendChild(getLocationAddress);
 
       var popup = new mapboxgl.Popup()
         .setLngLat(coordinates as mapboxgl.LngLatLike) // eslint-disable-line no-use-before-define
@@ -343,14 +470,40 @@ export class HomeComponent implements OnInit {
       this.clicked = true;
       // addEventListener
 
-      if (!Array.from(markerIndex)[0]) {
-        divElement.appendChild(markerNewBtn);
+      /**
+       * UGLY MESS BELOW
+       * TODO: REFACTOR AKA. CLEAN UP
+       */
+      var asd = document.getElementsByClassName('radial-nav');
+      var dsa = document.getElementsByClassName('nav');
+      dsa[0].classList.remove('active');
+      asd[0].className = 'radial-nav expanded';
+      asd[0].getElementsByClassName('li')[0].classList.remove('selected');
+      var qwe = document.getElementsByClassName('li');
 
-        markerNewBtn.addEventListener('click', (e) => {
-          popup.remove();
-          this.clicked = false;
-        });
-      }
+      qwe[0].addEventListener('click', (evt) => {
+        evt.stopPropagation();
+
+        var ewq = document.getElementsByClassName('nav');
+        ewq[0].classList.add('selected');
+
+        var uyt = document.getElementsByClassName('nav');
+        uyt[0].classList.add('active');
+
+        asd[0].classList.remove('expanded');
+      });
+      /**
+       * UGLY MESS ABOVE
+       */
+
+      // if (!Array.from(markerIndex)[0]) {
+      //   divElement.appendChild(markerNewBtn);
+
+      //   markerNewBtn.addEventListener('click', (e) => {
+      //     popup.remove();
+      //     this.clicked = false;
+      //   });
+      // }
 
       addToWaypoints.addEventListener('click', (e) => {
         this.waypoints.push(coordinates.toString());
@@ -377,10 +530,12 @@ export class HomeComponent implements OnInit {
       });
 
       getLocationAddress.addEventListener('click', (e) => {
-        this.getPlaceName(coordinates);
         this.latestBbox1 = bboxCoord1;
         this.latestBbox2 = bboxCoord2;
         this.latestCoords = coordinates as unknown as Coordinate;
+        this.waypoints.push(coordinates.toString());
+        this.directionsWithWaypoints();
+        this.getPlaceName(coordinates);
         popup.remove();
         this.clicked = false;
       });
@@ -402,23 +557,23 @@ export class HomeComponent implements OnInit {
       this.map.keyboard.enable();
 
       /// create map layers with realtime data
-      this.map.addLayer({
-        id: 'firebase',
-        source: 'firebase',
-        type: 'symbol',
-        layout: {
-          'text-field': '{message}',
-          'text-size': 24,
-          'text-transform': 'uppercase',
-          'icon-image': 'bin',
-          'text-offset': [0, 1.5],
-        },
-        paint: {
-          'text-color': '#f16624',
-          'text-halo-color': '#fff',
-          'text-halo-width': 2,
-        },
-      });
+      // this.map.addLayer({
+      //   id: 'firebase',
+      //   source: 'firebase',
+      //   type: 'symbol',
+      //   layout: {
+      //     'text-field': '{message}',
+      //     'text-size': 24,
+      //     'text-transform': 'uppercase',
+      //     'icon-image': 'bin',
+      //     'text-offset': [0, 1.5],
+      //   },
+      //   paint: {
+      //     'text-color': '#f16624',
+      //     'text-halo-color': '#fff',
+      //     'text-halo-width': 2,
+      //   },
+      // });
 
       // add markers to map
       // TODO
@@ -552,6 +707,18 @@ export class HomeComponent implements OnInit {
 
     this.mapService.setAppTitle = json.features[0].place_name;
 
+    /*
+     * 1. get the place name
+     * 2. get the coordinates of the place
+     * 3. get the coordinates of the clicked point
+     * 4. get the bounding box of the clicked point
+     * 5. check if the coordinates of the place is within the bounding box
+     * 6. if yes, then use the coordinates of the place
+     * 7. if no, then use the coordinates of the clicked point
+     * 8. add the direction to the directionsService
+     * 9. add the direction to the map
+     *
+     */
     var direction: Direction = {
       id: Math.random(),
       place_name: json.features[0].place_name,
@@ -577,11 +744,12 @@ export class HomeComponent implements OnInit {
   }
 
   private getWholeRouteDriving(directions: Direction[]): void {
-    if (directions.length < 2) {
-      this.map.removeLayer('route');
-      this.map.removeSource('route');
+    if (directions.length < 2 && this.map) {
+      // if (this.map.getLayer('route')) this.map.removeLayer('route');
+      // if (this.map.getSource('route')) this.map.removeSource('route');
       return;
     }
+    if (!directions || directions.length < 2) return;
 
     navigator.geolocation.getCurrentPosition((position) => {
       this.lat = position.coords.latitude;
@@ -733,86 +901,106 @@ export class HomeComponent implements OnInit {
   }
 
   private wholeRouteFunction(req: XMLHttpRequest) {
-    if (!req) return;
+    // https://api.mapbox.com/optimized-trips/v1/mapbox/driving
+
+    // code: "Ok"
+    // trips: [,…]0: {geometry: {,…}, legs: [,…], weight_name: "routability", weight: 179.60000000000002, duration: 178.9,…}distance: 777.8duration: 178.9geometry: {,…}legs: [,…]weight: 179.60000000000002weight_name: "routability"
+    // waypoints: [{distance: 55.848085634651085, name: "Moisionaukea", location: [23.762133, 61.34244],…},…]0: {distance: 55.848085634651085, name: "Moisionaukea", location: [23.762133, 61.34244],…}1: {distance: 0.11143697630438006, name: "Moisionaukea", location: [23.755621, 61.343742],…}
+
+    if (!req && !JSON.parse(req)?.response) return;
     var json = JSON.parse(req.response);
 
-    // if (!this.routeDataSet.has(json.routes[0])) {
-    //   this.routeData.push(json.routes[0]);
-    //   localStorage.setItem('routeData', JSON.stringify(this.routeData));
-    // }
-
-    var data = json.trips[0];
-
-    this.distance = Math.ceil(Math.round(data.distance) / 5) * 5;
-
-    this.distanceToDestination = this.distance.toString() + 'm';
-    if (this.distance > 2500) {
-      this.distanceToDestination = (data.distance / 1000).toFixed(2) + 'km';
+    if (!localStorage.getItem('routeData')) {
+      this.routeData.push(json.routes[0]);
+      localStorage.setItem('routeData', JSON.stringify(this.routeData));
     }
 
-    this.digit = Math.round(Number.parseInt(this.distanceToDestination));
+    var data = json?.trips[0] ?? json?.routes[0];
+
+    // this.distance = Math.ceil(Math.round(data.distance) / 5) * 5;
+
+    // this.distanceToDestination = this.distance.toString() + 'm';
+    // if (this.distance > 2500) {
+    //   this.distanceToDestination = (data.distance / 1000).toFixed(2) + 'km';
+    // }
+
+    // this.digit = Math.round(Number.parseInt(this.distanceToDestination));
+
+    // this.mapService.setAppTitle =
+    //   this.mapService.appTitleString.split('|')[0] +
+    //   '    |   ' +
+    //   this.distanceToDestination;
 
     this.mapService.setAppTitle =
       this.mapService.appTitleString.split('|')[0] +
       '    |   ' +
-      this.distanceToDestination;
+      (json.routes[0].distance / 1000).toFixed(2) +
+      ' km';
 
-    var route = data.geometry.coordinates;
+    if (data.geometry) {
+      var route = data.geometry.coordinates;
 
-    const geojsonFeature = {
-      type: 'Feature' as const,
-      properties: {
-        name: 'route',
-        amenity: 'Custom Route',
-        popupContent: 'Route',
-      },
-      geometry: {
-        type: 'LineString' as const,
-        coordinates: route,
-      },
-    };
+      const geojsonFeature = {
+        type: 'Feature' as const,
+        properties: {
+          name: 'route',
+          amenity: 'Custom Route',
+          popupContent: 'Route',
+        },
+        geometry: {
+          type: 'LineString' as const,
+          coordinates: route,
+        },
+      };
 
-    // if the route already exists on the map, reset it using setData
-    if (this.map.getSource('route')) {
-      const source: mapboxgl.GeoJSONSource = this.map.getSource(
-        'route'
-      ) as mapboxgl.GeoJSONSource;
+      // if the route already exists on the map, reset it using setData
+      if (this.map.getSource('route') && this.map.getLayer('route')) {
+        const source: mapboxgl.GeoJSONSource = this.map.getSource(
+          'route'
+        ) as mapboxgl.GeoJSONSource;
 
-      source.setData(geojsonFeature); // eslint-disable-line no-use-before-define
-    } else {
-      // otherwise, make a new request
-      this.map.addLayer({
-        id: 'route',
-        type: 'line',
-        source: {
-          type: 'geojson',
-          data: {
-            type: 'Feature',
-            properties: {},
-            geometry: {
-              type: 'LineString',
-              coordinates: route, // eslint-disable-line no-use-before-define
+        source.setData(geojsonFeature); // eslint-disable-line no-use-before-define
+      } else {
+        // otherwise, make a new request
+        this.map.addLayer({
+          id: 'route',
+          type: 'line',
+          source: {
+            type: 'geojson',
+            data: {
+              type: 'Feature',
+              properties: {},
+              geometry: {
+                type: 'LineString',
+                coordinates: route, // eslint-disable-line no-use-before-define
+              },
             },
           },
-        },
-        layout: {
-          'line-join': 'round',
-          'line-cap': 'round',
-        },
-        paint: {
-          // 'line-color': '#3887be',
-          'line-color': '#ffc107',
-          'line-width': 5,
-          'line-opacity': 0.75,
-        },
-      });
+          layout: {
+            'line-join': 'round',
+            'line-cap': 'round',
+          },
+          paint: {
+            // 'line-color': '#3887be',
+            'line-color': '#ffc107',
+            'line-width': 5,
+            'line-opacity': 0.75,
+          },
+        });
+      }
     }
     // add turn instructions here at the end
   }
 
   private routeFunction(req: XMLHttpRequest) {
-    if (!req) return;
+    // https://api.mapbox.com/directions/v5/mapbox/driving/
+
+    // code: "Ok"
+    // routes: [{weight_name: "auto", weight: 93.351, duration: 92.561, distance: 389.296,…}]0: {weight_name: "auto", weight: 93.351, duration: 92.561, distance: 389.296,…}uuid: "nAN535V6HTiyrC28Oz5Lo-pXugyKnOhUiw09r_PKgjJcZxgeQ5tkAA=="
+    // waypoints: [{distance: 55.854, name: "Moisionaukea", location: [23.762133, 61.34244]},…]0: {distance: 55.854, name: "Moisionaukea", location: [23.762133, 61.34244]}1: {distance: 0.025, name: "Moisionaukea", location: [23.755621, 61.343742]}
+
     var json = JSON.parse(req.response);
+    if (!req) return;
 
     if (!this.routeDataSet.has(json.routes[0])) {
       this.routeData.push(json.routes[0]);
@@ -822,6 +1010,8 @@ export class HomeComponent implements OnInit {
     this.routeActivated = true;
 
     var data = json.routes[0];
+    var route = data.geometry.coordinates; // route == json.routes[0].geometry.coordinates: Array(n[])
+
     this.distance = Math.ceil(Math.round(data.distance) / 5) * 5;
 
     this.distanceToDestination = this.distance.toString();
@@ -830,8 +1020,6 @@ export class HomeComponent implements OnInit {
     }
 
     this.digit = Math.round(Number.parseInt(this.distanceToDestination));
-
-    var route = data.geometry.coordinates;
 
     const geojsonFeature = {
       type: 'Feature' as const,
@@ -842,9 +1030,10 @@ export class HomeComponent implements OnInit {
       },
       geometry: {
         type: 'LineString' as const,
-        coordinates: route,
+        coordinates: route ?? [],
       },
     };
+
     // if the route already exists on the map, reset it using setData
     if (this.map.getSource('route')) {
       const source: mapboxgl.GeoJSONSource = this.map.getSource(

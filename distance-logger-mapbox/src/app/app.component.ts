@@ -1,5 +1,5 @@
 import { MapService } from './services/map.service';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { MatSidenav } from '@angular/material/sidenav';
 import { delay, filter } from 'rxjs/operators';
@@ -18,8 +18,10 @@ import {
 } from '@angular/animations';
 import { Subscription } from 'rxjs';
 import { Direction } from './interfaces/direction';
+import { MatTabGroup } from '@angular/material/tabs';
 @UntilDestroy()
 @Component({
+  // encapsulation: ViewEncapsulation.None,
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
@@ -57,6 +59,8 @@ export class AppComponent {
   @ViewChild('#sidenav2')
   sidenav2!: MatSidenav;
 
+  @ViewChild('tabs', { static: false }) tabGroup!: MatTabGroup;
+
   private subscription!: Subscription;
 
   public navSticky: boolean = false;
@@ -67,6 +71,7 @@ export class AppComponent {
   private sidenavManualclose: boolean = false;
   public appTitle: string = '';
   public direction: Direction[] = [];
+  public isExpanded: boolean = false;
   // private subscription: Subscription | undefined;
 
   public set setHelpWanted(bool: any) {
@@ -77,6 +82,10 @@ export class AppComponent {
 
   public get getIsHelpWanted() {
     return this.helpWanted;
+  }
+
+  public get getIsExpanded() {
+    return this.isExpanded;
   }
 
   public set setIsBigScreen(bool: any) {
@@ -95,6 +104,9 @@ export class AppComponent {
     return this.sidenav!! ? this.sidenav.mode === 'over' : false;
   }
 
+  public expandSidenavToggle() {
+    this.isExpanded = !this.isExpanded;
+  }
   public setNavSticky(event: boolean): void {
     this.navSticky = event;
     if (event && !this.isBigScreen) this.sidenav.mode = 'side';
@@ -105,7 +117,9 @@ export class AppComponent {
     if (this.navSticky) return;
     this.sidenavManualclose = true;
     withHelp ? (this.setHelpWanted = true) : (this.setHelpWanted = false);
+    this.tabGroup.selectedIndex = withHelp ? 0 : 1;
     if (!this.sidenav.opened) this.sidenav.toggle();
+    if (!this.getIsExpanded) this.expandSidenavToggle();
   }
 
   public color: ThemePalette = 'primary';
@@ -131,6 +145,7 @@ export class AppComponent {
   }
 
   ngAfterViewInit() {
+    this.tabGroup.selectedIndex = 1;
     this.observer
       .observe(['(max-width: 800px)'])
       .pipe(delay(1), untilDestroyed(this))

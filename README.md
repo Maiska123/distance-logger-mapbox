@@ -10,7 +10,9 @@ Angular based vehicle driving log application
 |--|--|--|
 | ![Angular](https://img.shields.io/badge/angular-%23DD0031.svg?style=for-the-badge&logo=angular&logoColor=white) | <img src="https://assets.website-files.com/5d3ef00c73102c436bc83996/5d3ef00c73102c893bc83a28_logo-regular.png" data-canonical-src="https://assets.website-files.com/5d3ef00c73102c436bc83996/5d3ef00c73102c893bc83a28_logo-regular.png" width="120" height="50" /> | ![Google Chrome](https://img.shields.io/badge/Google%20Chrome-4285F4?style=for-the-badge&logo=GoogleChrome&logoColor=white) |
 
-![mainscreen1](docs/distance-logger-mapbox_main1.jpg)
+
+![mainscreen3](docs/distance-logger-mapbox_main3.jpg)
+
 
 ![mainscreen2](docs/distance-logger-mapbox_main2.jpg)
 

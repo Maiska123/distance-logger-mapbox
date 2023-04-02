@@ -1,3 +1,5 @@
+@use 'sass:math';
+
 mat-toolbar {
   background: #004a9f;
   color: white;
@@ -42,7 +44,7 @@ mat-sidenav-container {
   display: contents !important;
 }
 
-.menu-button {
+.main-menu-button {
   width: 100%;
   display: flex;
   align-items: center;
@@ -55,10 +57,38 @@ mat-sidenav-container {
 }
 
 .avatar {
+  position: relative;
   margin-top: 16px;
+  z-index: 110;
   width: 100px;
   height: 100px;
   border-radius: 50%;
+
+  &:hover~label>.spots_inner>div>.button_spots {
+    @for $i from 1 through 19 {
+      &:nth-of-type(#{$i}) {
+        animation: spot-#{$i} .7s .4/random(10)+random(10)/10+s linear infinite;
+      }
+    }
+
+    @for $i from 20 through 40 {
+      &:nth-of-type(#{$i}) {
+        animation: spot-#{$i} .7s .4/random(10)+random(10)/10+s linear infinite;
+      }
+    }
+
+    @for $i from 40 through 46 {
+      &:nth-of-type(#{$i}) {
+        animation: spot-#{$i} .7s .4/random(10)+random(10)/10+s linear infinite;
+      }
+    }
+
+    @for $i from 46 through 54 {
+      &:nth-of-type(#{$i}) {
+        animation: spot-#{$i} .7s .4/random(10)+random(10)/10+s linear infinite;
+      }
+    }
+  }
 }
 
 .name {
@@ -94,6 +124,21 @@ mat-divider {
   position: absolute;
   right: 5px;
   top: 5px;
+}
+
+.expand-icon {
+  position: absolute;
+  bottom: 10px;
+}
+
+.expand {
+  width: 9px;
+  color: aliceblue;
+}
+
+.expand-button {
+  border: none;
+  background: none;
 }
 
 app-sidenav-help {
@@ -173,4 +218,357 @@ app-sidenav-help {
   100% {
     transform: translate(24px, 0);
   }
+}
+
+
+.menu-button {
+  //   min-width: 300px;
+  //   min-height: 60px;
+  //   font-family: 'Nunito', sans-serif;
+  //   font-size: 22px;
+  //   text-transform: uppercase;
+  //   letter-spacing: 1.3px;
+  //   font-weight: 700;
+  //   color: #313133;
+  //   background: #4FD1C5;
+  //   background: linear-gradient(90deg, rgba(129, 230, 217, 1) 0%, rgba(79, 209, 197, 1) 100%);
+  //   border: none;
+  //   border-radius: 1000px;
+  //   box-shadow: 12px 12px 24px rgba(79, 209, 197, .64);
+  transition: all 0.3s ease-in-out 0s;
+  //   cursor: pointer;
+  //   outline: none;
+  //   position: relative;
+  //   padding: 10px;
+}
+
+.menu-button::before {
+  content: "";
+  border-radius: 1000px;
+  min-width: 195px;
+  min-height: 30px;
+  border: 3px solid #00deff;
+  box-shadow: 0 0 13px 2px rgb(0 74 255 / 64%);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 99;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: all 0.3s ease-in-out 0s;
+}
+
+.menu-button:hover,
+.menu-button:focus {
+  // color: #313133;
+  transform: translateY(-3px);
+}
+
+.menu-button:hover::before,
+.menu-button:focus::before {
+  opacity: 1;
+}
+
+.menu-button::after {
+  content: '';
+}
+
+.close-btn::after {
+  content: '';
+  width: 30px;
+  height: 30px;
+  border-radius: 100%;
+  border: 6px solid #004affa3;
+  position: absolute;
+  z-index: -1;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: ring 1.7s infinite;
+}
+
+.menu-button:hover::after,
+.menu-button:focus::after {
+  animation: none;
+  display: none;
+}
+
+@keyframes ring {
+  0% {
+    width: 30px;
+    height: 30px;
+    opacity: 1;
+  }
+
+  100% {
+    width: 100px;
+    height: 100px;
+    opacity: 0;
+  }
+}
+
+
+
+input {
+  display: none;
+}
+
+input:checked+label {
+  .button_inner {
+    background: transparent;
+    transform: rotate(90deg);
+    width: 100px;
+    border-radius: 100px;
+    box-shadow: 0px 0px 0px 440px rgba(0, 0, 0, 0);
+    animation: finalbox .4s 4.42s cubic-bezier(0.39, 2.01, 0.27, 0.75) forwards;
+
+    span.t {
+      opacity: 0;
+      top: 20px;
+    }
+  }
+
+  i.l {
+    left: 14px;
+    opacity: 1;
+    top: 11px;
+    animation: down 1s .25s infinite, final .2s 4s forwards;
+  }
+
+  .tick {
+    position: absolute;
+    left: 2px;
+    right: 0;
+    transform: scale(0) rotate(-90deg);
+    color: #00C1FC;
+    top: 11px;
+    margin: auto;
+    font-size: 22px;
+    animation: tick .3s 4.7s forwards;
+  }
+
+  .button_spots {
+    opacity: 1;
+
+    @for $i from 0 through 60 {
+      &:nth-of-type(#{$i}) {
+        top: (16px - random(10)) - 0 !important;
+        left: -34px !important;
+        opacity: 0;
+        padding: random(20)/4 + 2 + px !important;
+        animation:spew 1s .3s forwards,
+        rotate 4s+random(4)/10 .25s+random(12)/10 linear infinite,
+        final .2s 4s forwards,
+        spot-#{$i} .7s .4/random(10)+random(10)/10+10s linear infinite !important;
+      }
+    }
+
+  }
+}
+
+.tick {
+  position: absolute;
+  left: -40;
+  right: 0;
+  transform: scale(0);
+  margin: auto;
+  font-size: 22px;
+}
+
+.spots {
+  display: block;
+  position: relative;
+  height: 8rem;
+  max-height: 128px;
+  // position: absolute;
+  // top: 50%;
+  // left: 0;
+  // right: 0;
+  // margin: auto;
+  // text-align: Center;
+  // height: 360px;
+  // width: 200px;
+  // transform: translateY(-50%);
+
+  h1 {
+    font-weight: 100;
+    color: White;
+    font-size: 24px;
+    margin: 0;
+    text-transform: uppercase;
+  }
+
+  h2 {
+    font-weight: 100;
+    color: #00C4FF;
+    opacity: 1;
+    font-size: 14px;
+    margin: 4px 0px 0px 0px;
+  }
+
+  .b_l_quad {
+    top: -50px;
+    display: block;
+    height: 0;
+    width: 0;
+    position: inherit;
+  }
+
+  .b_l_quad .button_spots {
+
+    @for $i from 1 through 20 {
+      &:nth-child(#{$i}) {
+        padding: random(3) + 2 + px;
+        left: -40 + ($i*4) + px;
+        top: -30 + px;
+      }
+    }
+
+    @for $i from 20 through 40 {
+      &:nth-child(#{$i}) {
+        padding: random(3) + 2 + px;
+        left: 30 + px;
+        top: -90 + ($i*3) + px;
+      }
+    }
+
+    @for $i from 40 through 60 {
+      &:nth-child(#{$i}) {
+        padding: random(3) + 2 + px;
+        left: -30 + px;
+        top: -120 + ($i*2.8) + px;
+      }
+    }
+  }
+
+  .button_spots {
+    position: absolute;
+    border-radius: 100px;
+    background: green;
+    opacity: 0;
+    animation: opacity 1s;
+
+    @for $i from 1 through 60 {
+      &:nth-of-type(#{$i}) {
+        transform-origin: 9px - random(10) 2px - random(10);
+        background: hsla(350 + random(399), 57% - random(10), 65%, 1);
+        box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.12);
+        transition: all 1s + math.div(random(10), 10);
+      }
+    }
+  }
+
+  &_inner {
+    border-radius: 2px;
+    position: absolute;
+    width: 0;
+    height: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    margin: 50%;
+    box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.04);
+    font-weight: 100;
+    font-size: 12px;
+    cursor: pointer;
+    text-align: Center;
+    transition: all 0.3s, box-shadow 0.2s, transform 0.2s 0.2s;
+
+    span.t {
+      position: relative;
+      top: 6px;
+      opacity: 1;
+      left: -10px;
+      transition: left .4s .1s;
+
+
+    }
+
+    i.l {
+      position: relative;
+      left: -19px;
+      top: 20px;
+      color: #00C4FF;
+      font-size: 25px;
+      opacity: 0;
+      transition: left .3s 0s, top .3s 0s, opacity .3s 0s;
+    }
+
+    &:hover {
+      // color: #2C3940;
+      // background: white;
+      box-shadow: 0px 17px 18px -14px rgba(0, 0, 0, 0.08);
+
+      span.t {
+        // left: 16px;
+        transition: left .4s;
+      }
+
+      i.l {
+        top: 12px;
+        opacity: 1;
+        transition: left .3s 0s, top .3s .1s, opacity .3s .1s;
+      }
+    }
+
+    &:hover .button_spots {
+      @for $i from 1 through 19 {
+        &:nth-of-type(#{$i}) {
+          animation: spot-#{$i} .7s math.div(0.4, random(10))+math.div(random(10), 10)+s linear infinite;
+        }
+      }
+
+      @for $i from 20 through 40 {
+        &:nth-of-type(#{$i}) {
+          animation: spot-#{$i} .7s math.div(0.4, random(10))+math.div(random(10), 10)+s linear infinite;
+        }
+      }
+
+      @for $i from 40 through 60 {
+        &:nth-of-type(#{$i}) {
+          animation: spot-#{$i} .7s math.div(0.4, random(10))+math.div(random(10), 10)+s linear infinite;
+        }
+      }
+    }
+  }
+}
+
+@for $i from 1 through 20 {
+  @keyframes spot-#{$i} {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      transform: translateY(-30px) translatex(-20px + $i);
+      opacity: .6;
+    }
+  }
+}
+
+@for $i from 20 through 40 {
+  @keyframes spot-#{$i} {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      transform: translateY(3px) translatex(15px + $i);
+      opacity: .6;
+    }
+  }
+}
+
+@for $i from 40 through 60 {
+  @keyframes spot-#{$i} {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      transform: translateY(3px - math.div($i, 2)) translatex(-10px - $i);
+      opacity: .6;
+    }
+  }
+
 }

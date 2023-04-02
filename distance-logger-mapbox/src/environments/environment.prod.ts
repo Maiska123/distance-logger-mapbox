@@ -8,7 +8,7 @@ export const environment = {
     projectId: "bin-map-mapbox",
     storageBucket: "bin-map-mapbox.appspot.com",
     messagingSenderId: "***REMOVED***",
-    appId: "1:***REMOVED***:web:16e9fe824e050050eb5ff9",
+    appId: "1:***REMOVED***:web:***REMOVED***",
     measurementId: "***REMOVED***"
   },
 

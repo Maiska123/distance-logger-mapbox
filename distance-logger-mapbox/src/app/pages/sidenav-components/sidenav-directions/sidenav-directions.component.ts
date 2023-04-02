@@ -1,7 +1,7 @@
 import { Coordinate } from './../../../interfaces/map';
 import { Direction } from 'src/app/interfaces/direction';
 import { DirectionsService } from './../../../services/directions.service';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Observer, Subscription } from 'rxjs';
 import { MapService } from 'src/app/services/map.service';
 import { trigger, transition, style, animate } from '@angular/animations';
 import {
@@ -52,13 +52,30 @@ interface calculatedDistanceBetweenPoints {
 })
 export class SidenavDirectionsComponent implements OnInit {
   @Output() listOutput = new EventEmitter<Direction[]>();
-  list: Direction[] = [];
-  private calculatedDistances
-  : calculatedDistanceBetweenPoints[] = [];
+  public list: Direction[] = [];
+  public calculatedDistances: calculatedDistanceBetweenPoints[] = [];
   private changeOccured: boolean = false;
+  private subscription: Subscription = new Subscription();
+  private intervalForRangesBetween: NodeJS.Timeout | undefined;
+
+  constructor(
+    private directionsService: DirectionsService /*, private cd: ChangeDetectorRef*/
+  ) {
+    this.subscription
+      .add
+      // this.directionsService.addresses$.subscribe((data) => {
+
+      //   if (!data) return;
+
+      //   let listItem = data.getElem();
+      //   if (listItem) this.list.push(listItem);
+
+      //   this.listOutput.emit(this.list);
+      // })
+      ();
+  }
 
   public set setChangeOccured(value: boolean) {
-    console.table(['setChangeOccured',value]);
     this.changeOccured = value;
   }
   /*
@@ -75,6 +92,7 @@ export class SidenavDirectionsComponent implements OnInit {
   public get getCalculatedDistanceHelper() {
     return -1;
   }
+
   public getCalculatedDistanceNext(item: Direction, i: number) {
     // let returnValue = 0;
     // let arr = this.calculatedDistances.filter((data: calculatedDistanceBetweenPoints) => {
@@ -85,142 +103,167 @@ export class SidenavDirectionsComponent implements OnInit {
     //   let returnValue = arr.find((match) => {
     //     (match.id1 == this.list[i+1].id || match.id2 == this.list[i+1].id)
     //   });
-    //   console.table(['returnValue - Next',returnValue, 'arr',arr]);
     //   return returnValue;
     // }
     // return -1;
     let returnValue;
     let boolReturnValue = this.calculatedDistances[i] ? true : false;
-    console.log('boolReturnValue');
-    console.log(boolReturnValue);
+
     if (boolReturnValue) {
-      console.log(this.calculatedDistances[i]);
-      console.log(this.calculatedDistances[i].distance);
-      }
-    if (boolReturnValue) returnValue = this.calculatedDistances[i].distance ?? undefined;
+    }
+    if (boolReturnValue)
+      returnValue = this.calculatedDistances[i].distance ?? undefined;
     return returnValue ?? null;
   }
-  public getCalculatedDistancePrevious(item: Direction, i: number) {
-    if (this.calculatedDistances[i] && this.calculatedDistances[i-1]) {
-      let calc = this.calculatedDistances.findIndex((data) => data.id1 == item.id);
-      let returnValue = this.calculatedDistances[calc].distance;
-      return returnValue;
+
+  public getCalculatedDistancePrevious(
+    item: Direction,
+    i: number
+  ): Observable<string> {
+    if (this.calculatedDistances.findIndex((data) => data.order == i) >= 0)
+      return new Observable<string>((observer: Observer<string>) =>
+        observer.next(
+          (
+            (this.calculatedDistances[
+              this.calculatedDistances.findIndex((data) => data.order == i)
+            ].distance ?? 0) / 1000
+          )?.toFixed(1) ?? ''
+        )
+      );
+
+    if (this.calculatedDistances.some((data) => data.order == i)) {
+      let calc = this.calculatedDistances.findIndex((data) => data.order == i);
+      if (calc < 0)
+        return new Observable<string>((observer: Observer<string>) =>
+          observer.next('')
+        );
+
+      let returnValue: number | undefined =
+        this.calculatedDistances[calc].distance;
+      return new Observable<string>((observer: Observer<string>) =>
+        observer.next(returnValue ? (returnValue / 1000)?.toFixed(1) ?? '' : '')
+      );
+    } else {
+      this.calculateDistances();
     }
-    return null;
+    return new Observable<string>((observer: Observer<string>) =>
+      observer.next('')
+    );
+
+    // }
+    // return null;
   }
 
   /*
-  * Called once when List of directions changes
-  *
-  * */
+   * Called once when List of directions changes
+   *
+   * */
   public calculateDistances(): void {
-
-    if(!this.calculatedDistances[0] && this.list[0] && this.list[1]) {
-      this.calculatedDistances = [];
-
-      const newCalculation: calculatedDistanceBetweenPoints = {
-        order: 1,
-        id1: this.list[0].id,
-        id2: this.list[1].id,
-        distance: this.calculateDistance(
-          this.list[0].id,
-          this.list[1].id,
-          true
-        ) as number
-      }
-
-      if ((newCalculation?.distance ?? 0) > 0) this.calculatedDistances?.push(newCalculation);
-
-    } else {
-      console.log('this.list');
-      console.log(this.list);
+    if (this.list[0] && this.list[1]) {
       this.calculatedDistances = [];
 
       // calculate distances again
-      for (let index = 0;
-        index < this.list.length;
-        index++ )
-      {
-        if (this.list[index] && this.list[index + 1]){
+      for (let index = 1; index <= this.list.length; index++) {
+        if (this.list[index - 1] && this.list[index]) {
           let newCalculation: calculatedDistanceBetweenPoints = {
             order: index,
-            id1: this.list[index + 0].id,
-            id2: this.list[index + 1].id,
+            id1: this.list[index - 1].id,
+            id2: this.list[index].id,
             distance: this.calculateDistance(
-              this.list[index + 0].id,
-              this.list[index + 1].id,
+              this.list[index - 1].id,
+              this.list[index].id,
               true
-            ) as number
+            ) as number,
+          };
+
+          if (newCalculation.distance != 0)
+            this.calculatedDistances?.push(newCalculation);
+          else {
+            if (this.intervalForRangesBetween) continue;
+            else
+              this.intervalForRangesBetween = setTimeout(() => {
+                this.calculateDistances();
+                clearTimeout(this.intervalForRangesBetween);
+                this.intervalForRangesBetween = undefined;
+              }, 1000);
           }
-          console.log('calculation: ' + newCalculation.distance);
-          if ((newCalculation.distance)) this.calculatedDistances?.push(newCalculation);
-          console.log('console.table(this.calculatedDistances);');
-          console.table(this.calculatedDistances);
+
+          // console.table(this.calculatedDistances);
         }
       }
     }
     this.setChangeOccured = false;
   }
 
-  public getCalculatedDistance(item: Direction, index: number, isPrevious: boolean = false) {
-
-    if
-      (
-        this.calculatedDistances?.some( (data) =>
-          data.id1 == item.id && data.id2 == this.list[index + 1].id ||
-          data.id2 == item.id && data.id1 == this.list[index + 1].id)
+  public getCalculatedDistance(
+    item: Direction,
+    index: number,
+    isPrevious: boolean = false
+  ) {
+    if (
+      this.calculatedDistances?.some(
+        (data) =>
+          (data.id1 == item.id && data.id2 == this.list[index + 1].id) ||
+          (data.id2 == item.id && data.id1 == this.list[index + 1].id)
       )
-    {
-      let indexOfCalculation = this.calculatedDistances
-        .findIndex( (data) =>
-        data.id1 == item.id && data.id2 == this.list[index + 1].id ||
-        data.id2 == item.id && data.id1 == this.list[index + 1].id);
+    ) {
+      let indexOfCalculation = this.calculatedDistances.findIndex(
+        (data) =>
+          (data.id1 == item.id && data.id2 == this.list[index + 1].id) ||
+          (data.id2 == item.id && data.id1 == this.list[index + 1].id)
+      );
 
-      if (this.calculatedDistances[indexOfCalculation].distance) return this.calculatedDistances[indexOfCalculation].distance;
-
-      this.calculatedDistances[indexOfCalculation].distance
-        = this.calculateDistance(
-        item.id,
-        this.list[index + 1].id ?? -1,
-        true
-      ) as number;
-
-      return this.calculatedDistances[indexOfCalculation].distance;
+      return (
+        this.calculatedDistances[indexOfCalculation].distance ??
+        (this.calculateDistance(
+          item.id,
+          this.list[index + 1].id ?? -1,
+          true
+        ) as number)
+      );
     } else {
-      console.log('no values');
       /****** NO CALCULATED ENTRIES *********/
       if (this.changeOccured) this.calculateDistances();
       return 0;
     }
   }
 
-  private subscription!: Subscription;
-
   remove(index: number) {
     if (!this.list.length) return;
     this.list.splice(index, 1);
-    this.calculatedDistances =
-      this.calculatedDistances?.filter((calculatedPoint) => {
-        calculatedPoint.id1 !== index || calculatedPoint.id2 !== index
-      });
+    this.calculatedDistances = this.calculatedDistances?.filter(
+      (calculatedPoint) => {
+        calculatedPoint.id1 !== index || calculatedPoint.id2 !== index;
+      }
+    );
+    this.updateDirectionList();
+    this.emitListEvent();
+  }
+
+  removeAll() {
+    if (!this.list.length) return;
+    this.list = [];
     this.updateDirectionList();
     this.emitListEvent();
   }
 
   removeFromItem(item: Direction) {
     this.list = this.list.filter((a) => a.id != item.id);
+    // if deleted calculations, have to reclalculate in ORDER
+    // this.calculatedDistances.filter((a) => a.id1 !== item.id && a.id2 !== item.id);// = [];
     this.updateDirectionList();
   }
 
   addFromItem(item: Direction) {
     this.list.push(item);
+    // if deleted calculations, have to reclalculate in ORDER
+    // this.calculatedDistances.filter((a) => a.id1 !== item.id && a.id2 !== item.id);// = [];
     this.updateDirectionList();
   }
 
   updateDirectionList() {
-    // this.changeOccured = true;
+    this.calculatedDistances = [];
     this.directionsService.overwriteDirection = this.list;
-    // this.cd.markForCheck();
   }
 
   emitListEvent() {
@@ -228,11 +271,16 @@ export class SidenavDirectionsComponent implements OnInit {
   }
 
   drop(event: CdkDragDrop<Direction[]>) {
-    moveItemInArray(this.list, event.previousIndex, event.currentIndex);
+    let array = Array.from(this.list);
+    let previous = event.previousIndex;
+    let current = event.currentIndex;
+    moveItemInArray(array, previous, current);
+    this.list = array;
+
     if (event.previousIndex !== event.currentIndex) this.updateDirectionList();
   }
 
-  hasDuplicate(item: Direction) {
+  hasDuplicateNeighbor(item: Direction) {
     return this.list.filter((a) => a.coords == item.coords).length > 1;
   }
 
@@ -242,36 +290,38 @@ export class SidenavDirectionsComponent implements OnInit {
     asNumber?: boolean
   ): string | number {
     return asNumber
-      ? (this.directionsService.returnDistanceToNext(
-          id1,
-          id2,
-          true
-        ) ?? 0)
+      ? this.directionsService.returnDistanceToNext(id1, id2, true) ?? 0
       : this.directionsService.returnDistanceToNext(id1, id2);
   }
 
-  constructor(
-    private directionsService: DirectionsService /*, private cd: ChangeDetectorRef*/
-  ) {
-    this.subscription = new Subscription();
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log('changes');
-    console.log(changes);
-  }
+  ngOnChanges(changes: SimpleChanges): void {}
 
   ngOnInit(): void {
     this.subscription.add(
-      this.directionsService.directionsArray$.subscribe(
-        (directionArray: Direction[]) => {
-          this.setChangeOccured = true;
-          this.list = directionArray;
+      this.directionsService.addresses$.subscribe((direction: Direction[]) => {
+        if (!direction) return;
 
-          this.calculateDistances();
-
+        if (direction.length < 2) {
+          this.list = direction;
+          return;
         }
-      )
+
+        this.list = direction;
+
+        // if (JSON.stringify(this.list) != JSON.stringify(direction)) return;
+        if (this.calculatedDistances.length != this.list.length - 1) {
+          this.calculateDistances();
+        }
+        this.setChangeOccured = true;
+
+        // let listItem: Direction[] = this.list.filter(dir => {
+        //   direction.includes(JSON.parse(JSON.stringify(dir)));
+        // });
+
+        // listItem.forEach((item) => {
+        //   this.list.push(item);
+        // });
+      })
     );
   }
 
