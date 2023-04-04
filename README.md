@@ -14,6 +14,10 @@ Angular based vehicle driving log application
 ![mainscreen3](docs/distance-logger-mapbox_main3.jpg)
 
 
+https://user-images.githubusercontent.com/42906162/229890592-d0507fd5-05c1-43ac-a222-287014def975.mp4
+
+
+
 ![mainscreen2](docs/distance-logger-mapbox_main2.jpg)
 
 ## Few previews of the app
