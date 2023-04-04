@@ -11,12 +11,11 @@ export class MapService {
   );
 
   public set setAppTitle(newTitle: string) {
-    this.appTitleString = newTitle;
+    this.appTitleString = newTitle + ' | ';
     this.appTitle.next(newTitle);
   }
 
-  constructor() {
-  }
+  constructor() {}
 
   getLocation(): Observable<any> {
     return Observable.create(

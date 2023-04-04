@@ -1,5 +1,5 @@
 <div @items class="top-buttons" *ngIf="list[0]">
-  <button md-fab (click)="remove(0)">
+  <button md-fab (click)="removeAll()" mat-icon-button class="expand-button">
     <mat-icon>remove_circle_outline</mat-icon>
   </button>
 </div>
@@ -25,8 +25,10 @@
         *ngIf="list[0] == list[i]; then thenTemplate; else elseTemplate"
       ></ng-container>
       <ng-template #thenTemplate>
-        <div class="vertical" @items>
-          <span>↧</span>||||<span *ngIf="list[i + 1] == undefined">⟂</span>
+        <div class="vertical" @items *ngIf="list[i]">
+          <span>↧</span>||||<span style="writing-mode: horizontal-tb"
+            >start</span
+          ><span *ngIf="list[i + 1] == undefined">⟂</span>
           <!-- <span style="writing-mode: horizontal-tb"
             ><span *ngIf="list[i + 1] !== undefined"
             >{{
@@ -37,12 +39,12 @@
         </div>
       </ng-template>
       <ng-template #elseTemplate>
-        <div class="vertical" @items>
-          |||||<span *ngIf="list[i + 1] == undefined">⟂</span>
-          <span style="writing-mode: horizontal-tb"
-            >{{
-              getCalculatedDistancePrevious(item, i) ?? '-'
-            }}km</span
+        <div class="vertical" @items *ngIf="list[i]">
+          ||||||<span *ngIf="list[i + 1] == undefined">⟂</span>
+          <span
+            *ngIf="calculatedDistances.length == list.length - 1"
+            style="writing-mode: horizontal-tb"
+            >{{ getCalculatedDistancePrevious(item, i) | async }}km</span
           >
         </div>
       </ng-template>
@@ -53,10 +55,11 @@
         @items
         class="box example-box"
         [item]="item"
-        [hasDuplicate]="hasDuplicate(item)"
+        [hasDuplicateNeighbor]="hasDuplicateNeighbor(item)"
         (itemOutputRemove)="removeFromItem($event)"
         (itemOutputAdd)="addFromItem($event)"
         cdkDrag
+        cdkDragBoundary=".list-container"
       >
       </app-direction>
     </div>

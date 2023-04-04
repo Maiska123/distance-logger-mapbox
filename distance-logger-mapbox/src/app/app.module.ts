@@ -16,14 +16,19 @@ import { SidenavDirectionsComponent } from './pages/sidenav-components/sidenav-d
 import { SidenavHelpComponent } from './pages/sidenav-components/sidenav-help/sidenav-help.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { StoreModule } from '@ngrx/store';
+import { addressReducer } from './store/reducers/route-plan.reducer';
+import { MatTabsModule } from '@angular/material/tabs';
+
 @NgModule({
   declarations: [
     AppComponent,
     SidenavDirectionsComponent,
     SidenavHelpComponent,
-    DirectionComponent
+    DirectionComponent,
   ],
   imports: [
+    StoreModule.forRoot({ addresses: addressReducer }),
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
@@ -35,9 +40,10 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatMenuModule,
     MatCheckboxModule,
     DragDropModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatTabsModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

@@ -6,12 +6,12 @@
     position="end"
     role="navigation"
     class="mat-elevation-z8"
-    [class.big-nav]="getIsHelpWanted && isBigScreen"
+    [class.big-nav]="getIsExpanded && isBigScreen"
   >
     <button
       mat-button
       (click)="getNavSticky ? null : sidenav2.toggle()"
-      class="close-sidenav2-2"
+      class="mat-icon-button mat-button-base close-sidenav2-2 close-btn"
     >
       <mat-icon> close </mat-icon>
     </button>
@@ -23,25 +23,62 @@
       [color]="color"
       (change)="setNavSticky($event.checked)"
     >
-
       <!-- Sticky Navigation -->
       <mat-icon *ngIf="getNavSticky">lock</mat-icon>
       <mat-icon *ngIf="!getNavSticky">lock_open</mat-icon>
     </mat-checkbox>
 
-    <span [ngSwitch]="getIsHelpWanted">
-      <app-sidenav-help *ngSwitchCase="true" @fadeSlideInOut>
-        <!-- AAPPUUUVA! -->
-      </app-sidenav-help>
-      <app-sidenav-directions
-        *ngSwitchCase="false"
-        @fadeSlideInOut
-        (listOutput)="(direction)"
+    <ng-container [ngSwitch]="getIsHelpWanted">
+      <mat-tab-group
+        #tabs
+        mat-stretch-tabs="true"
+        mat-align-tabs="start"
+        [disableRipple]="true"
+        dynamicHeight
+        fitInkBarToContent
+        mat-stretch-tabs="false"
+        mat-align-tabs="center"
       >
-        <!-- Ajosuunnitelma -->
-      </app-sidenav-directions>
-    </span>
-
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon>help</mat-icon>
+          </ng-template>
+          <div class="mat-elevation-z4">
+            <!-- *ngSwitchCase="true" -->
+            <app-sidenav-help @fadeSlideInOut>
+              <!-- AAPPUUUVA! -->
+            </app-sidenav-help>
+          </div>
+        </mat-tab>
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon>fmd_good</mat-icon>
+          </ng-template>
+          <div class="mat-elevation-z4">
+            <!-- *ngSwitchCase="false" -->
+            <app-sidenav-directions @fadeSlideInOut (listOutput)="(direction)">
+              <!-- Ajosuunnitelma -->
+            </app-sidenav-directions>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </ng-container>
+    <div class="expand-icon" (click)="expandSidenavToggle()">
+      <ng-container [ngSwitch]="getIsExpanded">
+        <ng-container *ngSwitchCase="true">
+          <button mat-icon-button class="expand-button">
+            <mat-icon class="expand">keyboard_arrow_right</mat-icon>
+            <mat-icon class="expand">keyboard_arrow_right</mat-icon>
+          </button>
+        </ng-container>
+        <ng-container *ngSwitchCase="false">
+          <button mat-icon-button class="expand-button">
+            <mat-icon class="expand">keyboard_arrow_left</mat-icon>
+            <mat-icon class="expand">keyboard_arrow_left</mat-icon>
+          </button>
+        </ng-container>
+      </ng-container>
+    </div>
     <div>
       <mat-icon>arrow_down</mat-icon>
     </div>
@@ -78,40 +115,130 @@
     <mat-sidenav-container>
       <mat-sidenav #sidenav="matSidenav" class="mat-elevation-z8">
         <button
-          class="close-sidenav"
+          class="close-sidenav close-btn"
           mat-icon-button
           (click)="sidenav.toggle()"
         >
           <mat-icon>close</mat-icon>
         </button>
-        <img
-          class="avatar mat-elevation-z8"
-          src="https://avatars.githubusercontent.com/u/42906162?v=4"
-        />
+        <div class="spots">
+          <img
+            class="avatar mat-elevation-z8"
+            src="https://avatars.githubusercontent.com/u/42906162?v=4"
+          />
+          <input id="spots" type="checkbox" />
+          <label for="spots">
+            <div class="spots_inner q">
+              <i class="l ion-log-in"></i>
+              <span class="t"></span>
+              <span>
+                <i class="tick ion-checkmark-round"></i>
+              </span>
+              <div class="b_l_quad">
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+                <div class="button_spots"></div>
+              </div>
+            </div>
+          </label>
+        </div>
 
         <h4 class="name">Maiska</h4>
         <p class="designation">The Engineer</p>
 
         <mat-divider></mat-divider>
 
-        <button mat-button class="menu-button" routerLink="/home">
-          <mat-icon>home</mat-icon>
-          <span>Home</span>
+        <button
+          mat-button
+          class="main-menu-button menu-button"
+          routerLink="/home"
+        >
+          <mat-icon>map</mat-icon>
+          <span>Kartta</span>
         </button>
-        <button mat-button class="menu-button" routerLink="/profile">
-          <mat-icon>person</mat-icon>
-          <span>Profile</span>
+        <button
+          mat-button
+          class="main-menu-button menu-button"
+          routerLink="/profile"
+        >
+          <mat-icon>layers</mat-icon>
+          <span>Reittisuunnitelma</span>
         </button>
-        <button mat-button class="menu-button" routerLink="/about">
+        <button
+          mat-button
+          class="main-menu-button menu-button"
+          routerLink="/about"
+        >
           <mat-icon>info</mat-icon>
-          <span>About</span>
+          <span>Tietoa</span>
         </button>
 
         <mat-divider></mat-divider>
 
-        <button mat-button class="menu-button" (click)="openSwitchPanel(true)">
+        <button
+          mat-button
+          class="main-menu-button menu-button"
+          (click)="openSwitchPanel(true)"
+        >
           <mat-icon>help</mat-icon>
-          <span>Help</span>
+          <span>Apua</span>
         </button>
 
         <!-- NAPPULA AVAAMAAN TOISEN SIDENAVIN - PARENT MENUN-->
@@ -119,18 +246,17 @@
         <button
           mat-button
           (click)="navSticky ? null : openSwitchPanel()"
-          class="toggle-Mbtn new--item menu-button"
+          class="toggle-Mbtn new--item main-menu-button menu-button"
         >
           <!--  (click)="navSticky ? null : openDirectionPanel()" -->
 
-          <mat-icon> directions</mat-icon>
-          Ajosuunnitelma
+          <mat-icon>directions</mat-icon>
+          <span>Pysähdykset</span>
           <mat-icon *ngIf="getNavSticky">lock</mat-icon>
         </button>
       </mat-sidenav>
       <mat-sidenav-content>
-
-      <!-- <div>main board</div> -->
+        <!-- <div>main board</div> -->
         <div class="content mat-elevation-z8">
           <router-outlet></router-outlet>
         </div>
