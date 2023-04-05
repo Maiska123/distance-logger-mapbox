@@ -70,6 +70,18 @@ export class HomeComponent implements OnInit {
     );
 
     this.subscription.add(
+      // Get Current Location Data
+      this.directionsService.getLocation().subscribe((position: any) => {
+        if (position.coords.latitude && position.coords.longitude) {
+          this.lat = position.coords.latitude;
+          this.lng = position.coords.longitude;
+
+          this.currentPosition = [this.lng, this.lat];
+        }
+      })
+    );
+
+    this.subscription.add(
       this.directionsService.addresses$.subscribe((direction: Direction[]) => {
         // this.snackbarService.openSnackBar('You Are Offline!');
         // this.waypoints = [];
@@ -121,7 +133,7 @@ export class HomeComponent implements OnInit {
           }
         } else if (direction.length == 0) {
           this.waypoints = [];
-          this.clearDirectionsWithWaypoints(); // if empty, clear the route
+          if (this.map) this.clearDirectionsWithWaypoints(); // if empty, clear the route
         } else {
           this.directionsHelper = direction;
         }
@@ -272,11 +284,11 @@ export class HomeComponent implements OnInit {
    * @calls this.map.flyTo()
    * @return nothing.
    */
-  private flyToCoords(coords: any[]) {
+  private flyToCoords(coords: any[], zoom: number = 17) {
     if (coords[0] && coords[1]) {
       this.map.flyTo({
         center: coords as mapboxgl.LngLatLike, // eslint-disable-line no-use-before-define
-        zoom: 17,
+        zoom: zoom,
       });
     }
   }
@@ -288,20 +300,13 @@ export class HomeComponent implements OnInit {
    * @return nothing.
    */
   private initializeMap(): void {
-    /// locate the user
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        this.lat = position.coords.latitude;
-        this.lng = position.coords.longitude;
-        this.map.flyTo({
-          center: [this.lng, this.lat],
-        });
-      });
-    }
-
-    this.currentPosition = [this.lng, this.lat];
 
     this.buildMap();
+
+    /// locate the user
+    this.map.flyTo({
+      center: [this.lng, this.lat],
+    });
   }
 
   private handleAppConnectivityChanges(): void {
@@ -422,7 +427,6 @@ export class HomeComponent implements OnInit {
       const dummy4 = document.createElement('li');
       dummy4.className = 'li';
       ulContainer.appendChild(addToWaypoints);
-      ulContainer.appendChild(dummy1);
       ulContainer.appendChild(routeBtn);
       ulContainer.appendChild(dummy2);
       ulContainer.appendChild(markerNewBtn);
@@ -433,11 +437,25 @@ export class HomeComponent implements OnInit {
 
       var coords: any;
 
-      addToWaypoints.innerHTML = `<button class="menu-button btn swipe-overlay btn-success btn-simple text-white" >Add a Waypoint</button>`;
-      routeBtn.innerHTML = `<button class="menu-button btn swipe-overlay btn-success btn-simple text-white" >Get Route</button>`;
-      markerNewBtn.innerHTML = `<button class="menu-button btn swipe-overlay btn-success btn-simple text-white" >New Marker</button>`;
-      flyToUser.innerHTML = `<button class="menu-button btn swipe-overlay btn-success btn-simple text-white" >Fly To User</button>`;
-      getLocationAddress.innerHTML = `<button class="menu-button btn swipe-overlay btn-success btn-simple text-white" >Get Address</button>`;
+      addToWaypoints.innerHTML = `<button class="menu-button btn tooltip swipe-overlay btn-success btn-simple text-white" >
+      <span class="material-icons md-36" style="font-size:46px" >zoom_in</span> <span class="tooltiptext">Lähennä kohteeseen</span>
+      </button>`;
+      routeBtn.innerHTML = `<button class="menu-button btn tooltip swipe-overlay btn-success btn-simple text-white" >
+      <span class="material-icons md-36" style="font-size:46px" >navigation</span> 
+      <span class="tooltiptext">Reitti tänne</span>
+      </button>`;
+      markerNewBtn.innerHTML = `<button class="menu-button btn tooltip swipe-overlay btn-success btn-simple text-white" >
+      <span class="material-icons md-36" style="font-size:46px" >flag</span> 
+      <span class="tooltiptext">Merkitse kohde</span>
+      </button>`;
+      flyToUser.innerHTML = `<button class="menu-button btn tooltip swipe-overlay btn-success btn-simple text-white" >
+      <span class="material-icons md-36" style="font-size:46px" >person_pin</span> 
+      <span class="tooltiptext">Etsi minut</span>
+      </button>`;
+      getLocationAddress.innerHTML = `<button class="menu-button btn tooltip swipe-overlay btn-success btn-simple text-white" >
+      <span class="material-icons md-36" style="font-size:46px" >add_circle_outline</span> 
+      <span class="tooltiptext">Lisää ajoreittiin</span>
+      </button>`;
 
       if (Array.from(markerIndex)[0]) {
         var nearestPointIndex = this.getNearestPoint(
@@ -481,17 +499,17 @@ export class HomeComponent implements OnInit {
       asd[0].getElementsByClassName('li')[0].classList.remove('selected');
       var qwe = document.getElementsByClassName('li');
 
-      qwe[0].addEventListener('click', (evt) => {
-        evt.stopPropagation();
+      // qwe[0].addEventListener('click', (evt) => {
+      //   evt.stopPropagation();
 
-        var ewq = document.getElementsByClassName('nav');
-        ewq[0].classList.add('selected');
+      //   var ewq = document.getElementsByClassName('nav');
+      //   ewq[0].classList.add('selected');
 
-        var uyt = document.getElementsByClassName('nav');
-        uyt[0].classList.add('active');
+      //   var uyt = document.getElementsByClassName('nav');
+      //   uyt[0].classList.add('active');
 
-        asd[0].classList.remove('expanded');
-      });
+      //   asd[0].classList.remove('expanded');
+      // });
       /**
        * UGLY MESS ABOVE
        */
@@ -506,9 +524,11 @@ export class HomeComponent implements OnInit {
       // }
 
       addToWaypoints.addEventListener('click', (e) => {
-        this.waypoints.push(coordinates.toString());
-        popup.remove();
-        this.clicked = false;
+        this.flyToCoords(coordinates, 21);
+        // this.waypoints.push(coordinates.toString());
+
+        // popup.remove();
+        // this.clicked = false;
       });
 
       routeBtn.addEventListener('click', (e) => {
@@ -619,12 +639,6 @@ export class HomeComponent implements OnInit {
     // make a directions request using walking profile
     // an arbitrary start will always be the same
     // only the end or destination will change
-
-    // Get Current Location Data
-    navigator.geolocation.getCurrentPosition((position) => {
-      this.lat = position.coords.latitude;
-      this.lng = position.coords.longitude;
-    });
 
     // Its going to be the starting point
     var start = [this.lng, this.lat];
@@ -751,11 +765,6 @@ export class HomeComponent implements OnInit {
     }
     if (!directions || directions.length < 2) return;
 
-    navigator.geolocation.getCurrentPosition((position) => {
-      this.lat = position.coords.latitude;
-      this.lng = position.coords.longitude;
-    });
-
     // https://api.mapbox.com/optimized-trips/v1/{profile}/{coordinates}
 
     var coordinteString = '';
@@ -802,11 +811,6 @@ export class HomeComponent implements OnInit {
   private getRouteDriving(end: any): void {
     this.currentPoint = end;
 
-    navigator.geolocation.getCurrentPosition((position) => {
-      this.lat = position.coords.latitude;
-      this.lng = position.coords.longitude;
-    });
-
     var start = [this.lng, this.lat];
 
     if (!(this.currentPosition == start && this.currentDestination == end)) {
@@ -847,11 +851,6 @@ export class HomeComponent implements OnInit {
     // only the end or destination will change
     this.currentPoint = end;
     // if (localStorage.getItem("routeData")  !== null ) var obj = (localStorage.getItem("routeData"));
-
-    navigator.geolocation.getCurrentPosition((position) => {
-      this.lat = position.coords.latitude;
-      this.lng = position.coords.longitude;
-    });
 
     var start = [this.lng, this.lat];
 

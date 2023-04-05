@@ -139,8 +139,8 @@ button.btn.btn-success.btn-simple.text-white.circled {
 
 .mapboxgl-popup-close-button {
   position: absolute;
-  right: 39%;
-  top: 33%;
+  right: 56px;
+  top: 50px;
   border: 0;
   transform: translateY(50%) translateX(50%);
   border-radius: 0 3px 0 0;
@@ -209,16 +209,16 @@ button.btn.btn-success.btn-simple.text-white.circled {
   .radial-nav {
     position: relative;
     display: inline-block;
-    width: 70px;
-    height: 70px;
+    width: 0;
+    height: 0;
     -webkit-transform-origin: center center;
   }
 
   .radial-nav .menu {
     border: none !important;
     position: relative;
-    width: 70px;
-    height: 70px;
+    width: 0;
+    height: 0;
     z-index: 100;
     transition: all 0.5s;
     display: table-cell;
@@ -232,8 +232,8 @@ button.btn.btn-success.btn-simple.text-white.circled {
   .radial-nav li:not(.menu) {
     position: absolute;
     left: 0;
-    width: 70px;
-    height: 70px;
+    width: 0;
+    height: 0;
     border-radius: 70px;
     // border: 1px solid transparent;
     text-align: center;
@@ -305,6 +305,39 @@ button.btn.btn-success.btn-simple.text-white.circled {
     -webkit-transform: rotate(225deg) translateX(120px) rotate(-225deg);
   }
 
+
+  .radial-nav.expanded li:nth-child(1) .tooltip .tooltiptext {
+    -webkit-transform: translateX(-80px)  translateY(-50px);
+  }
+
+  .radial-nav.expanded li:nth-child(2) .tooltip .tooltiptext {
+    -webkit-transform: rotate(-45deg) translateX(40px)  translateY(-10px) rotate(45deg);
+  }
+
+  .radial-nav.expanded li:nth-child(3) .tooltip .tooltiptext {
+    -webkit-transform: translateX(120px);
+  }
+
+  .radial-nav.expanded li:nth-child(4) .tooltip .tooltiptext {
+    -webkit-transform: rotate(45deg)  translateX(59px) translateY(27px) rotate(-45deg);
+  }
+
+  .radial-nav.expanded li:nth-child(5) .tooltip .tooltiptext {
+    -webkit-transform: translateY(120px);
+  }
+
+  .radial-nav.expanded li:nth-child(6) .tooltip .tooltiptext {
+    -webkit-transform: rotate(135deg)  translateX(175px) translateY(86px) rotate(-135deg);
+  }
+
+  .radial-nav.expanded li:nth-child(7) .tooltip .tooltiptext {
+    -webkit-transform: rotate(180deg) translateX(120px) rotate(-180deg);
+  }
+
+  .radial-nav.expanded li:nth-child(8) .tooltip .tooltiptext {
+    -webkit-transform: rotate(225deg)  translateX(154px)  translateY(-102px) rotate(-225deg);
+  }
+
   .radial-nav.expanded li button {
     opacity: 1;
   }
@@ -349,8 +382,8 @@ $h: #FF4081;
   position: absolute;
   top: 0;
   left: 0;
-  width: 150%;
-  padding-top: 150%;
+  width: 0;
+  padding-top: 0;
   transition: 0.25s ease;
 }
 
@@ -362,7 +395,7 @@ $h: #FF4081;
 
 %c {
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
 %s {
@@ -373,26 +406,50 @@ $h: #FF4081;
     0 20px 20px -5px rgba($c, 0.15);
 }
 
+
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+  transition: opacity 0.3s ease-in-out 0.2s;
+  opacity: 0;
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  opacity: 1;
+}
+
 .btn {
   min-width: min-content;
   margin-top: 2px !important;
   margin-bottom: 0.5vh !important;
-  margin-left: 1vw !important;
+  margin-left: 36px !important;
   margin-right: 1px !important;
-  width: 8vw;
+  width: 2cm;
   color: black;
   background: azure;
-  height: 32px;
+  height: 65px;
   flex: auto;
   border-radius: 45px;
-  box-shadow: 0px 4px 9px 0px rgb(0 0 0 / 43%);
-  transition: all 0.3s ease 0s;
+  box-shadow: 0px 4px 9px 0px rgba(0, 0, 0, 0.43);
   cursor: pointer;
   text-transform: capitalize;
+  max-width: 110px;
 
   &.swipe-overlay {
     @extend %b;
     @extend %c;
+    transition: color 0.3s ease 0.2s;
+    transition: background 0.3s ease 0.2s;
 
     &::after {
       @extend %p;
