@@ -77,13 +77,7 @@ mat-sidenav-container {
       }
     }
 
-    @for $i from 40 through 46 {
-      &:nth-of-type(#{$i}) {
-        animation: spot-#{$i} .7s .4/random(10)+random(10)/10+s linear infinite;
-      }
-    }
-
-    @for $i from 46 through 54 {
+    @for $i from 40 through 60 {
       &:nth-of-type(#{$i}) {
         animation: spot-#{$i} .7s .4/random(10)+random(10)/10+s linear infinite;
       }
@@ -143,6 +137,7 @@ mat-divider {
 
 app-sidenav-help {
   width: -webkit-fill-available;
+  width: moz-available;
 }
 
 .big-nav {
