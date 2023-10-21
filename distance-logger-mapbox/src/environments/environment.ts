@@ -9,10 +9,10 @@ export const environment = {
     apiKey: "***REMOVED***",
     authDomain: "***REMOVED***",
     databaseURL: "***REMOVED***",
-    projectId: "bin-map-mapbox",
-    storageBucket: "bin-map-mapbox.appspot.com",
+    projectId: "***REMOVED***",
+    storageBucket: "***REMOVED***",
     messagingSenderId: "***REMOVED***",
-    appId: "1:***REMOVED***:web:***REMOVED***",
+    appId: "***REMOVED***",
     measurementId: "***REMOVED***"
   },
 

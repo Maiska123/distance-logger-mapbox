@@ -161,7 +161,8 @@ export class HomeComponent implements OnInit {
     };
 
     // if the route already exists on the map, reset it using setData
-    let source = this.map.getSource('route') as mapboxgl.GeoJSONSource;
+    let source;
+    if (this.map) source = this.map.getSource('route') as mapboxgl.GeoJSONSource;
     if (source) {
       source.setData(geojsonFeature); // eslint-disable-line no-use-before-define
     }
